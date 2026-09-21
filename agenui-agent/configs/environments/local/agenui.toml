@@ -1,0 +1,60 @@
+[server]
+listen_address = "127.0.0.1:18081"
+read_header_timeout_ms = 5000
+shutdown_timeout_ms = 10000
+# 跨域允许的前端 Origin(仅 scheme+host,不含路径)。为空则不下发任何 CORS 头。
+allowed_origins = ["http://127.0.0.1:3100", "http://localhost:3100"]
+
+[harness]
+config_path = "configs/environments/local/harness.yaml"
+environment = "local"
+migration_mode = "up"
+
+[agent]
+id = "agenui_agent"
+version = "1.0.0"
+
+[http]
+max_request_bytes = 1048576
+heartbeat_interval_ms = 15000
+
+[renderer_catalog]
+# 当前发布的 Renderer Catalog。升级/回滚只更新其 current.json 指针。
+root = "configs/renderer-catalogs"
+
+[design_knowledge]
+root = "configs/design-public"
+revision = "revisions/demo-v1"
+receipt_key_env = "AGENUI_DESIGN_KNOWLEDGE_RECEIPT_KEY"
+max_docs = 24
+max_bytes = 98304
+watch_enabled = true
+watch_interval_ms = 1000
+retain_revisions = 3
+
+[database]
+# Studio 本地可编辑的模型连接、规则、知识、接口和算子使用该数据库。
+# Run、事件、会话、恢复与 Artifact 由 Harness 自己的存储配置管理。
+# 本地默认 sqlite3，管理服务会幂等初始化所需业务表。
+#   AGENUI_DATABASE_DSN=file:var/agenui/studio.db
+#
+# 可选 MySQL：driver = "mysql"，DSN 用
+# user:pass@tcp(host:3306)/AGENUI_APP?parseTime=true&loc=Asia%2FShanghai。
+driver = "sqlite"
+dsn_env = "AGENUI_DATABASE_DSN"
+
+[operator]
+# Local demo serves this source-compatible Detail API from the shared SQLite
+# data plane. Production can replace it with any compatible published service.
+endpoint = "http://127.0.0.1:18082/api/v1/agenui/platform/operator/published/detail"
+
+[export]
+# Relative API paths in the bundled SQLite knowledge base are expanded to this
+# local test service. Production knowledge should publish absolute endpoints or
+# configure its own runtime-facing base URL here.
+data_source_base_url = "http://127.0.0.1:18082"
+
+[rule_worker]
+enabled = true
+# Parsing uses the dedicated agenui_rule_parser Harness Agent and therefore the
+# same model configured in Studio Settings.

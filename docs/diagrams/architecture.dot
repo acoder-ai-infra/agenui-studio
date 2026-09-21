@@ -1,0 +1,51 @@
+digraph AGenUIStudio {
+  graph [rankdir=TB, bgcolor="#FFFFFF", pad="0.35", nodesep="0.34", ranksep="0.42", splines=ortho, fontname="Arial"];
+  node [shape=rect, style="rounded,filled", color="#CBD5E1", fillcolor="#FFFFFF", fontcolor="#0F172A", fontname="Arial", fontsize=12, margin="0.18,0.12", penwidth=1.2];
+  edge [color="#64748B", fontname="Arial", fontsize=10, arrowsize=0.7, penwidth=1.25];
+
+  user [label="Describe the UI\n+ optional reference image", fillcolor="#F8FAFC"];
+  studio [label="AGenUI Studio\ncreate · preview · edit · publish", fillcolor="#EFF6FF", color="#60A5FA"];
+  harness [label="Harness\nSession · Run · SSE · Control · Resume", fillcolor="#F5F3FF", color="#A78BFA"];
+  harness_ports [label="Replaceable Harness adapters\nModel Gateway · durable SQL · hot state\nIdentity · Artifact Store · OpenTelemetry", style="rounded,dashed,filled", color="#2563EB", fillcolor="#EFF6FF"];
+
+  subgraph cluster_generation {
+    label="Model-guided generation";
+    color="#BFDBFE";
+    fontcolor="#1E3A8A";
+    fontname="Arial";
+    fontsize=11;
+    style="rounded";
+    main [label="Main Agent\nContent / Edit Contract", fillcolor="#EFF6FF", color="#60A5FA"];
+    style_agent [label="Style Agent\nlayout + semantic slots"];
+    binder [label="Binder Agent\ndata + operator binding"];
+  }
+
+  agenui_ports [label="Replaceable AGenUI adapters\nRule Provider · Knowledge/Data MCP\nOperator Runtime · Renderer Catalog", style="rounded,dashed,filled", color="#2563EB", fillcolor="#EFF6FF"];
+  workspace [label="Versioned DSL Workspace\nCAS · schema · protected sets", fillcolor="#ECFDF5", color="#34D399"];
+  artifacts [label="Harness Artifact Store\nDesign · Binding · Final", fillcolor="#F8FAFC"];
+  renderer [label="Live Renderer\nAGenUI protocol + DataModel", fillcolor="#FFF7ED", color="#FB923C"];
+  package [label="Portable Runtime Package\nexpanded sources · bindings · operators", fillcolor="#FFF7ED", color="#FB923C"];
+
+  core_runtime [label="Bundled core Runtime\nreference load · validate · execute", fillcolor="#F8FAFC"];
+  custom_runtime [label="Your Runtime / orchestrator\nversion · schedule · execute · observe", style="rounded,dashed,filled", color="#2563EB", fillcolor="#EFF6FF"];
+  delivery [label="Your delivery service\nHTTP Callback or MQ consumer", style="rounded,dashed,filled", color="#2563EB", fillcolor="#EFF6FF"];
+
+  user -> studio -> harness -> main;
+  harness_ports -> harness [style=dashed];
+  main -> style_agent;
+  main -> binder;
+  agenui_ports -> style_agent [style=dashed];
+  agenui_ports -> binder [style=dashed];
+  style_agent -> workspace;
+  binder -> workspace;
+  workspace -> artifacts;
+  artifacts -> renderer;
+  artifacts -> package;
+  package -> core_runtime;
+  package -> custom_runtime;
+  package -> delivery;
+
+  { rank=same; harness_ports; harness; }
+  { rank=same; renderer; package; }
+  { rank=same; core_runtime; custom_runtime; delivery; }
+}

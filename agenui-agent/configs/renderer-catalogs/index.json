@@ -1,0 +1,17 @@
+{
+  "catalogs": [
+    {
+      "catalog_id": "https://agenui.org/specification/v0_9/renderer-catalogs/1.0.0/catalog.json",
+      "catalog_sha256": "456f8b58084d6a83007b526bb8af4e79dc4a5aa07cd9df5b7e2b722a21464ffa",
+      "catalog_version": "1.0.0",
+      "status": "published"
+    },
+    {
+      "catalog_id": "https://agenui.org/specification/v0_9/basic_catalog.json",
+      "catalog_sha256": "7f13b303587f775fd3dc35818aa718c012d74391e47235dca756c5b10e2ab9c1",
+      "catalog_version": "1.1.0",
+      "status": "published"
+    }
+  ],
+  "schema_version": "v1"
+}

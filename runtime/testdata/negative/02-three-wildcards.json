@@ -1,0 +1,7 @@
+{
+  "version":"2.0","cardId":"negative-02","name":"Three wildcard levels",
+  "protocol":[{"version":"v0.9","updateDataModel":{"surfaceId":"default","path":"/","value":{}}}],
+  "dataSources":[{"id":"ds-1","endpoint":"http://127.0.0.1:18094/unused","method":"GET","role":"primary"}],
+  "bindings":[{"slotId":"deep.field","dataSourceId":"ds-1","fieldPath":"$.a[*].b[*].c[*].value","refKey":"/a[*]/b[*]/c[*]/value","missingPolicy":"block"}],
+  "meta":{"contractHash":"sha256:1111111111111111111111111111111111111111111111111111111111111111","designHash":"sha256:2222222222222222222222222222222222222222222222222222222222222222","requirementsHash":"sha256:3333333333333333333333333333333333333333333333333333333333333333"}
+}

@@ -1,0 +1,24 @@
+{
+  "name": "agenui-studio-renderer",
+  "version": "0.1.0",
+  "description": "Lightweight web renderer for AGenUI v0.9 surface messages and the complete basic component catalog",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "agenui.css"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "jsdom": "^25.0.1",
+    "typescript": "^5.5.4",
+    "vitest": "^3.2.6"
+  }
+}

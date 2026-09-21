@@ -1,0 +1,5 @@
+object_backend: file
+metadata_backend: sqlite
+root: artifacts
+download_base: /api/v1/artifacts
+max_object_bytes: 52428800

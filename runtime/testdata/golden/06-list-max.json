@@ -1,0 +1,8 @@
+{
+  "version":"2.0","cardId":"golden-06","name":"List max",
+  "protocol":[{"version":"v0.9","updateComponents":{"surfaceId":"default","components":[{"id":"maximum","component":"Text","text":{"path":"/maximum"}}]}},{"version":"v0.9","updateDataModel":{"surfaceId":"default","path":"/","value":{}}}],
+  "dataSources":[{"id":"ds-1","endpoint":"http://127.0.0.1:18094/case06","method":"GET","role":"primary"}],
+  "bindings":[{"slotId":"maximum.field","dataSourceId":"ds-1","fieldPath":"$.values[*]","refKey":"/maximum","missingPolicy":"block","transforms":[{"operatorVersionId":403}]}],
+  "operators":[{"operatorVersionId":403,"operatorKey":"agenui.list.max","version":1,"inputSchema":{"type":"array","minItems":1,"items":{"type":"number"}},"paramsSchema":{"type":"object","additionalProperties":false},"outputSchema":{"type":"number"},"sourceHash":"sha256:40869cce6deb881fdd196d606356c77d58a7863f902b639fd84d32b508b59a86","language":"javascript","entry":"run","sourceCode":"function run(values, params) { if (!values.length) throw new Error(\"empty\"); return Math.max.apply(null, values.map(function(v) { return Number(params.field ? v[params.field] : v); })); }"}],
+  "meta":{"contractHash":"sha256:1111111111111111111111111111111111111111111111111111111111111111","designHash":"sha256:2222222222222222222222222222222222222222222222222222222222222222","requirementsHash":"sha256:3333333333333333333333333333333333333333333333333333333333333333"}
+}

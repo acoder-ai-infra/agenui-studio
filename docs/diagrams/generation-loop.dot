@@ -1,0 +1,42 @@
+digraph GenerationLoop {
+  graph [
+    rankdir=TB,
+    bgcolor="#FFFFFF",
+    pad="0.35",
+    nodesep="0.38",
+    ranksep="0.72",
+    splines=spline,
+    fontname="Arial"
+  ];
+  node [
+    shape=rect,
+    style="rounded,filled",
+    color="#CBD5E1",
+    fillcolor="#FFFFFF",
+    fontcolor="#0F172A",
+    fontname="Arial",
+    fontsize=12,
+    margin="0.2,0.13",
+    penwidth=1.2
+  ];
+  edge [color="#64748B", fontcolor="#475569", fontname="Arial", fontsize=10, arrowsize=0.7, penwidth=1.25];
+
+  intent [label="1  User intent\nWhat should the UI contain?", fillcolor="#EFF6FF", color="#60A5FA"];
+  contract [label="2  Content Contract\ncontent · actions · constraints", fillcolor="#F5F3FF", color="#A78BFA"];
+  design [label="3  Design Workspace\nrules · catalog · preview data", fillcolor="#ECFDF5", color="#34D399"];
+  binding [label="4  Binding Workspace\nsource · field · transforms", fillcolor="#ECFDF5", color="#34D399"];
+  delivery [label="5  Runtime Package\nexpanded and executable", fillcolor="#FFF7ED", color="#FB923C"];
+
+  edit [label="Follow-up edit", fillcolor="#F8FAFC"];
+  fence [label="Target + Change + Protected Sets\nbase revision + hashes", fillcolor="#FEFCE8", color="#EAB308"];
+
+  intent -> contract -> design -> binding -> delivery;
+  delivery -> edit [style=dashed];
+  edit -> fence;
+  fence -> design [label="style / text", color="#16A34A", fontcolor="#166534", constraint=false];
+  fence -> binding [label="data", color="#16A34A", fontcolor="#166534", constraint=false];
+
+  { rank=same; intent; contract; design; }
+  { rank=same; binding; delivery; }
+  { rank=same; edit; fence; }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "demo.product.list",
+  "searchText": "product products item list catalog title price distance detail 商品 产品 列表 标题 价格 距离 详情",
+  "path": "/demo/products",
+  "description": "Generic demo product list with title, integer price, distance and detail URL.",
+  "score": 1,
+  "dataSourceId": "demo.products",
+  "knowledgeEntityId": "demo.product.list",
+  "responseModel": {
+    "type": "object",
+    "properties": {
+      "items": {"type": "array", "items": {"type": "object", "properties": {
+        "id": {"type": "string"},
+        "title": {"type": "string"},
+        "price_cents": {"type": "integer"},
+        "distance_meters": {"type": "integer"},
+        "detail_url": {"type": "string"}
+      }}},
+      "catalog_url": {"type": "string"}
+    }
+  },
+  "responseFields": [
+    {"path": "$.items[*].id", "name": "Product ID", "semantic": "product stable identifier", "valueType": "string", "scope": "list_item", "entityKey": "id"},
+    {"path": "$.items[*].title", "name": "Product title", "semantic": "product item title name", "valueType": "string", "scope": "list_item"},
+    {"path": "$.items[*].price_cents", "name": "Product price", "semantic": "product price amount in cents", "valueType": "integer", "unit": "cents", "scope": "list_item"},
+    {"path": "$.items[*].distance_meters", "name": "Distance", "semantic": "distance in meters", "valueType": "integer", "unit": "meters", "scope": "list_item"},
+    {"path": "$.items[*].detail_url", "name": "Detail URL", "semantic": "product detail action URL", "valueType": "string", "scope": "list_item"},
+    {"path": "$.catalog_url", "name": "Catalog URL", "semantic": "open complete product catalog action URL", "valueType": "string", "scope": "card"}
+  ],
+  "entity": {"entity_key": "id"},
+  "bindingContract": {"primary_row_list": "$.items"}
+}

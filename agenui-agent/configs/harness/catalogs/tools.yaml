@@ -1,0 +1,805 @@
+# AGenUI Host tools are registered by ToolProvider; this catalog declares the
+# model-facing contract and MCP tools. Child ask_user requests use Harness'
+# native Control/Resume path.
+schema_version: harness.capability-catalog.v1
+enabled:
+  - ask_user@1.0.1
+  - search_developer_apis@1.0.1
+  - list_developer_operators@1.0.1
+  - agenui_execute_operator@1.1.0
+  - agenui_read_design_knowledge@1.0.0
+  - agenui_submit_content_contract@1.0.0
+  - agenui_publish_next_steps@1.3.0
+  - agenui_preflight_capabilities@1.0.0
+  - agenui_resolve_design_edit@2.2.0
+  - agenui_submit_edit_contract@2.1.0
+  - agenui_prepare_binding_edit@1.0.0
+  - agenui_workspace@2.2.0
+definitions:
+  - name: ask_user
+    version: 1.0.1
+    type: function
+    description: Pause the current tool call and ask the user to resolve one or more structured questions.
+    allowed_agents: ["*"]
+    handler: harness.ask_user
+    input_schema:
+      type: object
+      required: [questions]
+      properties:
+        questions:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [header, question, options]
+            properties:
+              header:
+                type: string
+                minLength: 1
+                maxLength: 64
+              question:
+                type: string
+                minLength: 1
+                maxLength: 4096
+              options:
+                type: array
+                minItems: 2
+                maxItems: 4
+                items:
+                  type: object
+                  required: [label, description]
+                  properties:
+                    label:
+                      type: string
+                      minLength: 1
+                      maxLength: 128
+                    description:
+                      type: string
+                      minLength: 1
+                      maxLength: 1024
+                  additionalProperties: false
+            additionalProperties: false
+      additionalProperties: false
+    output_schema:
+      type: object
+      required: [response]
+      properties:
+        response:
+          type: object
+          required: [answers]
+          properties:
+            answers:
+              type: array
+              minItems: 1
+              items:
+                type: object
+                required: [question_id, question, answer]
+                properties:
+                  question_id: {type: string, minLength: 1}
+                  question: {type: string, minLength: 1}
+                  option_id: {type: string}
+                  answer: {type: string, minLength: 1}
+                  text: {type: string}
+                additionalProperties: false
+          additionalProperties: false
+      additionalProperties: false
+    timeout_ms: 300000
+    max_inline_bytes: 32768
+    max_model_context_bytes: 32768
+    max_sse_preview_bytes: 4096
+    artifact_threshold_bytes: 32768
+  - name: search_developer_apis
+    display_name: 检索接口能力
+    version: 1.0.1
+    type: mcp
+    description: Search APIs for the current data-binding requirements.
+    allowed_agents: [agenui_style, agenui_binder]
+    server_id: agenui-knowrag
+    mcp_tool_name: search_developer_apis
+    timeout_ms: 45000
+    input_schema:
+      type: object
+      required: [query]
+      properties:
+        query: {type: string, minLength: 1}
+        top_k: {type: integer, minimum: 1, maximum: 3, default: 1}
+      additionalProperties: false
+    output_schema:
+      type: object
+      properties:
+        query: {type: string}
+        total: {type: integer, minimum: 0}
+        results: {type: array, items: {type: object}}
+      additionalProperties: true
+    max_inline_bytes: 4194304
+    max_model_context_bytes: 4194304
+    max_sse_preview_bytes: 4096
+    artifact_threshold_bytes: 4194304
+  - name: list_developer_operators
+    display_name: 查询可用数据算子
+    version: 1.0.1
+    type: mcp
+    description: List a bounded page of published operators available to data binding.
+    allowed_agents: [agenui_binder]
+    server_id: agenui-knowrag
+    mcp_tool_name: list_developer_operators
+    timeout_ms: 45000
+    input_schema:
+      type: object
+      properties:
+        page_no: {type: integer, minimum: 1, maximum: 5, default: 1}
+        page_size: {type: integer, minimum: 1, maximum: 100, default: 100}
+      additionalProperties: false
+    output_schema:
+      type: object
+      required: [items, total, page_no, page_size]
+      properties:
+        items:
+          type: array
+          maxItems: 100
+          items:
+            type: object
+            required: [operator_id, operator_key, summary]
+            properties:
+              operator_id: {type: integer, minimum: 1}
+              operator_key: {type: string, minLength: 1}
+              summary: {type: string, minLength: 1}
+            additionalProperties: false
+        total: {type: integer, minimum: 0}
+        page_no: {type: integer, minimum: 1, maximum: 5}
+        page_size: {type: integer, minimum: 1, maximum: 100}
+      additionalProperties: true
+    max_inline_bytes: 1048576
+    max_model_context_bytes: 1048576
+    max_sse_preview_bytes: 4096
+    artifact_threshold_bytes: 1048576
+  - name: agenui_execute_operator
+    display_name: 验证数据转换算子
+    version: 1.1.0
+    type: function
+    description: Dry-run one selected developer operator against a representative source field value and typed params.
+    allowed_agents: [agenui_binder]
+    handler: agenui_execute_operator
+    timeout_ms: 45000
+    input_schema:
+      type: object
+      required: [operator_id, sample_value, params]
+      properties:
+        operator_id: {type: integer, minimum: 1}
+        sample_value: {}
+        params: {type: object}
+      additionalProperties: false
+    output_schema:
+      type: object
+      required: [schema_version, ok, execution]
+      properties:
+        schema_version: {type: string}
+        ok: {const: true}
+        execution:
+          type: object
+          required: [execution_id, operator_id, output, output_hash, replayed]
+          properties:
+            execution_id: {type: string}
+            operator_id: {type: integer, minimum: 1}
+            output: {}
+            output_hash: {type: string}
+            replayed: {type: boolean}
+          additionalProperties: false
+      additionalProperties: false
+    max_inline_bytes: 4194304
+    max_model_context_bytes: 4194304
+    max_sse_preview_bytes: 4096
+    artifact_threshold_bytes: 4194304
+  - name: agenui_read_design_knowledge
+    display_name: 读取设计规则
+    version: 1.0.0
+    type: function
+    description: Read one layout and its transitive element and rule documents from the active design-rule revision.
+    allowed_agents: [agenui_style]
+    handler: agenui_read_design_knowledge
+    input_schema:
+      type: object
+      required: [layout_ids]
+      properties:
+        layout_ids:
+          type: array
+          minItems: 1
+          maxItems: 1
+          uniqueItems: true
+          items:
+            type: string
+            minLength: 1
+            description: Copy a layout id exactly from the current design-knowledge-catalog. The valid id set is provided dynamically by the active design knowledge revision and is validated by the tool.
+      additionalProperties: false
+    output_schema:
+      type: object
+      required: [revision_id, revision_hash, receipt, documents]
+      properties:
+        revision_id: {type: string, minLength: 1}
+        revision_hash: {type: string, pattern: "^sha256:[0-9a-f]{64}$"}
+        receipt:
+          type: object
+          required:
+            [schema_version, attestation, revision_id, revision_hash, layout_ids, closure_hash, scope_hash]
+          properties:
+            schema_version: {const: agenui.design-knowledge-receipt/v1}
+            attestation:
+              type: string
+              minLength: 32
+              maxLength: 64
+              pattern: "^[A-Za-z0-9_-]+$"
+              description: Compact signed non-secret proof; copy exactly and never interpret.
+            revision_id: {type: string, minLength: 1}
+            revision_hash: {type: string, pattern: "^sha256:[0-9a-f]{64}$"}
+            layout_ids:
+              type: array
+              minItems: 1
+              maxItems: 1
+              uniqueItems: true
+              items: {type: string}
+            closure_hash: {type: string, pattern: "^sha256:[0-9a-f]{64}$"}
+            scope_hash: {type: string, pattern: "^hmac-sha256:[0-9a-f]{64}$"}
+          additionalProperties: false
+        documents:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [id, kind, version, content]
+            properties:
+              id: {type: string, minLength: 1}
+              kind: {type: string, enum: [layout, element, rule]}
+              version: {type: string, minLength: 1}
+              content: {type: string, minLength: 1}
+              sketch: {type: string}
+            additionalProperties: false
+      additionalProperties: false
+    timeout_ms: 3000
+    max_inline_bytes: 131072
+    max_model_context_bytes: 131072
+    max_sse_preview_bytes: 2048
+    artifact_threshold_bytes: 131072
+
+  - name: agenui_submit_content_contract
+    display_name: 生成内容契约
+    version: 1.0.0
+    type: function
+    description: Validate and freeze the Main Agent's minimal business content contract before Style Agent delegation. IDs are semantic content or action identities, never API fields or component IDs.
+    allowed_agents: [agenui_agent]
+    handler: agenui_submit_content_contract
+    input_schema:
+      type: object
+      required: [goal, type, delivery_mode, contents]
+      properties:
+        goal:
+          type: string
+          minLength: 1
+          description: 用户最终想通过这张卡完成什么，不描述接口或样式实现。
+        type:
+          type: string
+          enum: [single, list]
+          description: 卡片展示单个对象还是同类对象列表。
+        delivery_mode:
+          type: string
+          enum: [executable, design_preview]
+          description: executable 表示必须完成合法数据与动作绑定后才可交付；design_preview 仅在用户明确要求静态/演示预览且拒绝外部或运行时来源时使用，此模式不得声明可发布或可下载。
+        contents:
+          type: array
+          minItems: 1
+          description: 卡片需要展示的业务内容清单，每项只表达业务语义。
+          items:
+            type: object
+            required: [id, description]
+            properties:
+              id: {type: string, minLength: 1, description: 稳定的业务内容标识，不是 API 字段名或 JSONPath。}
+              description: {type: string, minLength: 1, description: 给人和模型看的内容含义。}
+              required: {type: boolean, description: true 表示缺失该内容时不能按原方案交付。}
+            additionalProperties: false
+        actions:
+          type: array
+          description: 用户可执行的业务动作清单，不包含 URL、事件名和参数绑定。
+          items:
+            type: object
+            required: [id, description]
+            properties:
+              id: {type: string, minLength: 1, description: 稳定的业务动作标识。}
+              description: {type: string, minLength: 1, description: 用户能理解的动作说明。}
+            additionalProperties: false
+        constraints:
+          type: array
+          description: 用户明确说出的禁止项或边界，不预置未出现的约束。
+          items: {type: string, minLength: 1}
+      additionalProperties: false
+    output_schema:
+      type: object
+      required: [contract_id, revision, content_hash, status, delivery_mode]
+      properties:
+        contract_id: {type: string, description: Host 生成的契约稳定标识。}
+        revision: {type: integer, minimum: 1, description: 当前会话中该契约的递增版本。}
+        content_hash: {type: string, pattern: "^sha256:[0-9a-f]{64}$", description: 规范化契约内容哈希。}
+        status: {const: confirmed, description: 表示契约已经过结构校验并冻结。}
+        delivery_mode: {type: string, enum: [executable, design_preview]}
+      additionalProperties: false
+    timeout_ms: 1500
+    max_inline_bytes: 8192
+    max_model_context_bytes: 8192
+    max_sse_preview_bytes: 1024
+    artifact_threshold_bytes: 8192
+
+  - name: agenui_publish_next_steps
+    display_name: 生成下一步建议
+    version: 1.3.0
+    type: function
+    description: Publish up to three concrete post-run actions as a host-validated UI contract. This is not a blocking question and must not replace ask_user.
+    allowed_agents: [agenui_agent]
+    handler: agenui_publish_next_steps
+    input_schema:
+      type: object
+      required: [schema_version, items]
+      properties:
+        schema_version:
+          type: string
+          const: agenui.next_steps.v2
+          description: 固定的下一步计划协议版本，前端只识别受支持的版本。
+        items:
+          type: array
+          minItems: 1
+          maxItems: 3
+          description: 结合本轮实际生成结果给出的具体后续建议；每项必须指向当前产物中的明确对象、说明具体改法及判断依据。
+          items:
+            type: object
+            required: [label, description, prompt]
+            properties:
+              label: {type: string, minLength: 1, maxLength: 24, description: 直接展示的具体改动，必须同时包含当前产物中的对象和改动方向或目标值，例如“把主标题字号调大”或“将评分标签改为红色”；禁止“调整卡片样式”等类别级标题。}
+              description: {type: string, minLength: 1, maxLength: 160, description: 必填；结合当前界面的真实内容、层级、配色或数据状态，说明这项改动为何适合当前产物。}
+              prompt: {type: string, minLength: 1, maxLength: 160, description: 必填；点击后填入输入框的完整可执行请求，明确修改对象和改法，并说明未提及部分保持不变。}
+            additionalProperties: false
+      additionalProperties: false
+    output_schema:
+      type: object
+      required: [schema_version, plan_id, title, items]
+      properties:
+        schema_version: {type: string, const: agenui.next_steps.v2}
+        plan_id: {type: string, pattern: "^next_[0-9a-f]{24}$", description: Host 生成的幂等计划标识。}
+        title: {type: string, const: 下一步建议}
+        items:
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            type: object
+            required: [id, label, description, prompt]
+            properties:
+              id: {type: string, pattern: "^next_[0-9a-f]{24}_[1-3]$"}
+              label: {type: string, minLength: 1, maxLength: 24}
+              description: {type: string, minLength: 1, maxLength: 160}
+              prompt: {type: string, minLength: 1, maxLength: 160}
+            additionalProperties: false
+      additionalProperties: false
+    timeout_ms: 1000
+    max_inline_bytes: 8192
+    max_model_context_bytes: 8192
+    max_sse_preview_bytes: 4096
+    artifact_threshold_bytes: 8192
+
+  - name: agenui_preflight_capabilities
+    display_name: 检索字段与能力知识
+    version: 1.0.0
+    type: function
+    description: Query semantic data and action capability knowledge for every frozen Contract item. Unknown capability is returned explicitly and never invented.
+    allowed_agents: [agenui_style]
+    handler: agenui_preflight_capabilities
+    input_schema:
+      type: object
+      required: [contract_source]
+      properties:
+        contract_source:
+          type: string
+          enum: [frozen, provided]
+          description: Production uses frozen so Host reads the current session contract; isolated Style evaluation may use provided with a minimal contract.
+        contract:
+          type: object
+          description: Minimal contract used only for isolated Style evaluation. Production must omit it.
+          required: [goal, type, contents]
+          properties:
+            goal: {type: string, minLength: 1}
+            type: {type: string, enum: [single, list]}
+            contents:
+              type: array
+              minItems: 1
+              items:
+                type: object
+                required: [id, description]
+                properties:
+                  id: {type: string, minLength: 1}
+                  description: {type: string, minLength: 1}
+                  required: {type: boolean}
+                additionalProperties: false
+            actions:
+              type: array
+              items:
+                type: object
+                required: [id, description]
+                properties:
+                  id: {type: string, minLength: 1}
+                  description: {type: string, minLength: 1}
+                additionalProperties: false
+            constraints: {type: array, items: {type: string, minLength: 1}}
+          additionalProperties: false
+      additionalProperties: false
+    output_schema:
+      type: object
+      required: [items, overall]
+      properties:
+        items:
+          type: array
+          description: One evidence-backed result for every Contract content or action item.
+          items:
+            type: object
+            required: [contract_item_id, item_type, status, knowledge, may_need_operator, note]
+            properties:
+              contract_item_id: {type: string}
+              item_type: {type: string, enum: [content, action]}
+              status: {type: string, enum: [available, unavailable, unknown]}
+              knowledge: {type: array}
+              may_need_operator: {type: boolean}
+              note: {type: string}
+            additionalProperties: false
+        overall: {type: string, enum: [ready, needs_attention, blocked]}
+      additionalProperties: false
+    timeout_ms: 3000
+    max_inline_bytes: 32768
+    max_model_context_bytes: 32768
+    max_sse_preview_bytes: 2048
+    artifact_threshold_bytes: 32768
+
+  - name: agenui_resolve_design_edit
+    display_name: 解析界面修改要求
+    version: 2.2.0
+    type: function
+    description: Discover real elements from the current validated design in bounded pages, or validate one exact ID. The model selects semantic targets; the Host only applies explicit structural filters.
+    allowed_agents: [agenui_agent]
+    handler: agenui_resolve_design_edit
+    input_schema:
+      type: object
+      required: [query]
+      properties:
+        query: {type: string, minLength: 1, description: 管理后台原始自然语言，例如“把查看详情按钮放大点”。}
+        target_id: {type: string, description: 可选的单目标精确检查；多目标编辑无需逐个调用，直接在提交工具中原子校验。}
+        cursor: {type: string, description: 上一页返回的设计版本游标；设计变化后会返回 stale_cursor。}
+        page_size: {type: integer, minimum: 1, maximum: 50, description: 每页候选数量，默认 20，最大 50。}
+        filters:
+          type: object
+          description: 可选结构化过滤；Host 不根据 query 做关键词或语义猜测。
+          properties:
+            component_types: {type: array, items: {type: string, minLength: 1}}
+            semantic_roles: {type: array, items: {type: string, minLength: 1}}
+            relations: {type: array, items: {type: string, minLength: 1}}
+          additionalProperties: false
+      additionalProperties: false
+    output_schema:
+      type: object
+      required: [query, status]
+      properties:
+        query: {type: string, description: 原始自然语言修改请求。}
+        design_revision: {type: string, description: 建立元素索引所使用的当前设计版本。}
+        status: {type: string, enum: [candidates, resolved, not_found, ambiguous, invalid_cursor, stale_cursor, no_base_design], description: 候选发现、精确解析或可恢复失败状态。}
+        target: {type: object, description: target_id 经 Host 精确校验后返回的真实元素。}
+        candidates: {type: array, description: 当前页的紧凑真实候选，包含 ID、类型、语义槽位、可编辑路径、parent_id 和有界 child_count。}
+        matched_count: {type: integer, minimum: 0}
+        has_more: {type: boolean}
+        next_cursor: {type: string}
+        retryable: {type: boolean}
+        error: {type: object}
+        next_action: {type: string}
+        reason: {type: string}
+        route: {type: string}
+        continue_generation: {type: boolean}
+        instruction: {type: string}
+      additionalProperties: false
+    timeout_ms: 1500
+    max_inline_bytes: 16384
+    max_model_context_bytes: 16384
+    max_sse_preview_bytes: 2048
+    artifact_threshold_bytes: 16384
+
+  - name: agenui_submit_edit_contract
+    display_name: 生成界面修改契约
+    version: 2.1.0
+    type: function
+    description: Atomically classify and persist one declarative edit batch. Existing IDs become bounded property updates; missing IDs become insertions only when a complete component declaration and real parent topology are supplied.
+    allowed_agents: [agenui_agent]
+    handler: agenui_submit_edit_contract
+    input_schema:
+      type: object
+      required: [change_scope, operation, targets]
+      properties:
+        change_scope: {type: string, enum: [design_update], description: 对当前冻结设计执行局部声明式修改。}
+        operation: {type: string, enum: [upsert], description: Host 根据当前 revision 确定性分类 create、update 与 unchanged；模型不分别选择 CRUD。}
+        targets:
+          type: array
+          minItems: 1
+          maxItems: 32
+          description: 模型根据用户原话声明的完整期望目标集合；可混合已存在和待新增组件，Host 先整体预检再原子提交。
+          items:
+            type: object
+            properties:
+              target_id: {type: string, minLength: 1, description: 已有候选 ID，或期望组件的稳定 ID。Host 依据冻结 DSL 判断是否存在。}
+              requested_changes:
+                type: object
+                minProperties: 1
+                description: 已存在组件的期望属性差异。Key 必须来自目标 editable_paths；value 由模型确定。
+                additionalProperties: true
+              component:
+                type: object
+                required: [id, component]
+                description: 可选的声明式组件片段。ID 已存在时其属性叶与 requested_changes 合并校验；ID 缺失时作为新组件完整声明。
+                properties:
+                  id: {type: string, minLength: 1}
+                  component: {type: string, minLength: 1}
+                additionalProperties: true
+              parent_id: {type: string, minLength: 1, description: 仅缺失组件创建时必需；必须是当前批次完成后真实存在的父组件。}
+              after_id: {type: string, minLength: 1, description: 可选的同父兄弟 ID；未提供时确定性追加。}
+            anyOf:
+              - required: [target_id, requested_changes]
+              - required: [component]
+            additionalProperties: false
+      additionalProperties: false
+    output_schema:
+      type: object
+      required: [accepted]
+      properties:
+        accepted: {type: boolean}
+        retryable: {type: boolean}
+        error: {type: object}
+        next_action: {type: string}
+        edit_id: {type: string, description: Host 生成的稳定编辑身份。}
+        schema_version: {type: string, const: edit_contract.v2}
+        edit_contract_ref: {type: string, description: 已持久化审计 Artifact 引用。}
+        base_generation_id: {type: string, description: 修改所基于的已完成 Generation。}
+        target_set: {type: array, description: Host 校验后的唯一允许修改路径。}
+        protected_set: {type: array, description: 本轮必须保持不变的制品和其它设计槽位。}
+        impact_set: {type: array, description: Host 确定性计算的最小重算范围。}
+        preconditions: {type: object, description: 基准 Contract、Design、Slot 与 Binding Hash。}
+        created_component_ids: {type: array, items: {type: string}}
+        updated_component_ids: {type: array, items: {type: string}}
+        unchanged_component_ids: {type: array, items: {type: string}}
+      additionalProperties: false
+    timeout_ms: 3000
+    max_inline_bytes: 16384
+    max_model_context_bytes: 16384
+    max_sse_preview_bytes: 2048
+    artifact_threshold_bytes: 16384
+
+  - name: agenui_prepare_binding_edit
+    display_name: 准备数据绑定修改
+    version: 1.0.0
+    type: function
+    description: Prepare an existing card's data-binding edit from the user's exact request. This validates that a completed generation exists and creates a typed route fact; it does not choose fields or mappings.
+    allowed_agents: [agenui_agent]
+    handler: agenui_prepare_binding_edit
+    input_schema:
+      type: object
+      required: [query]
+      properties:
+        query: {type: string, minLength: 1, description: The user's exact natural-language request for changing data binding.}
+      additionalProperties: false
+    output_schema:
+      type: object
+      required: [status, route]
+      properties:
+        status: {type: string, const: prepared}
+        route: {type: string, const: binding_edit}
+      additionalProperties: false
+    timeout_ms: 3000
+    max_inline_bytes: 4096
+    max_model_context_bytes: 4096
+    max_sse_preview_bytes: 1024
+    artifact_threshold_bytes: 4096
+
+  - name: agenui_workspace
+    display_name: 生成界面结构
+    version: 2.2.0
+    type: function
+    description: Inspect and atomically mutate the versioned AGenUI document through bounded Host-owned methods. Edit authorization always comes from the frozen Host contract, never from model arguments.
+    allowed_agents: [agenui_style, agenui_binder]
+    handler: agenui_workspace
+    input_schema:
+      # Anthropic requires every tool input_schema to declare a top-level
+      # object even when the operation variants are expressed with oneOf.
+      type: object
+      x-harness-discriminator: action
+      oneOf:
+        - type: object
+          required: [action, surface_id, catalog_id, root_id, data_model]
+          properties:
+            action: {const: begin}
+            surface_id: {type: string, minLength: 1}
+            catalog_id: {type: string, minLength: 1}
+            root_id:
+              type: string
+              enum: [root]
+              description: A2UI v0.9 has no root identifier in createSurface, so the component tree root is always the stable id "root".
+            data_model:
+              description: Initial preview values. Use representative, non-sensitive examples so the first render is readable; this is not JSON Schema.
+              oneOf: [{type: object}, {type: string, minLength: 2}]
+          additionalProperties: false
+        - type: object
+          required: [action, base_revision, components]
+          properties:
+            action: {const: put_components}
+            base_revision: {type: string, minLength: 1}
+            components:
+              description: Add or replace at most 32 components by stable id. Canonical form is {"id":"title","component":"Text","text":{"path":"/title"}}. The tool also normalizes {"id":"title","component":{"component":"Text","text":{"path":"/title"}}}. Split large surfaces across calls and follow next_actions from every result.
+              oneOf:
+                - type: array
+                  minItems: 1
+                  maxItems: 32
+                  items:
+                    type: object
+                    required: [id, component]
+                    properties:
+                      id: {type: string, minLength: 1}
+                      component:
+                        oneOf:
+                          - {type: string, minLength: 1}
+                          - type: object
+                            required: [component]
+                            properties:
+                              component: {type: string, minLength: 1}
+                            additionalProperties: true
+                    additionalProperties: true
+                - {type: string, minLength: 2}
+          additionalProperties: false
+        - type: object
+          required: [action, base_revision, field_slots, action_slots]
+          properties:
+            action: {const: set_slots}
+            base_revision: {type: string, minLength: 1}
+            field_slots:
+              description: One semantic slot per bindable preview leaf. contractItemId must copy an exact frozen Content Contract identity. refKey is the actual absolute data-model path used by this field (for example /title or /items[*]/title); the Host never infers or rewrites it. Do not invent slot IDs; the Host derives stable IDs from the component, Contract identity and refKey.
+              oneOf:
+                - type: array
+                  maxItems: 512
+                  items:
+                    type: object
+                    required: [componentId, contractItemId, refKey, role, description, assetType, required, valueType, scope]
+                    properties:
+                      componentId: {type: string, minLength: 1}
+                      contractItemId: {type: string, minLength: 1}
+                      refKey: {type: string, minLength: 1}
+                      role: {type: string, minLength: 1}
+                      description: {type: string, minLength: 1}
+                      assetType: {type: string, minLength: 1}
+                      required: {type: boolean}
+                      valueType: {type: string, minLength: 1}
+                      scope: {type: string, minLength: 1}
+                      scopeRefKey: {type: string}
+                    additionalProperties: false
+                - {type: string, minLength: 2}
+            action_slots:
+              description: One semantic slot per declared action. contractActionId must copy an exact frozen Content Contract identity. The Host derives a distinct stable ID for every component and Contract action pair.
+              oneOf:
+                - type: array
+                  maxItems: 512
+                  items:
+                    type: object
+                    required: [componentId, contractActionId, role, scope, scopeRefKey]
+                    properties:
+                      componentId: {type: string, minLength: 1}
+                      contractActionId: {type: string, minLength: 1}
+                      role: {type: string, minLength: 1}
+                      scope: {type: string, minLength: 1}
+                      scopeRefKey: {type: string}
+                    additionalProperties: false
+                - {type: string, minLength: 2}
+            design_knowledge_receipt:
+              oneOf: [{type: object}, {type: string, minLength: 2}]
+          additionalProperties: false
+        - type: object
+          required: [action, base_revision, data_model]
+          properties:
+            action: {const: set_preview_data}
+            base_revision: {type: string, minLength: 1}
+            data_model:
+              description: Replace preview data with meaningful example values after component authoring. Keys and nesting must match component paths.
+              oneOf: [{type: object}, {type: string, minLength: 2}]
+          additionalProperties: false
+        - type: object
+          required: [action]
+          properties:
+            action: {const: inspect}
+            component_ids: {type: array, maxItems: 20, uniqueItems: true, items: {type: string, minLength: 1}}
+          additionalProperties: false
+        - type: object
+          required: [action, base_revision]
+          properties:
+            action: {const: apply_edit_contract}
+            base_revision: {type: string, minLength: 1}
+          additionalProperties: false
+        - type: object
+          required: [action, base_revision]
+          properties:
+            action: {const: commit}
+            base_revision: {type: string, minLength: 1}
+          additionalProperties: false
+        - type: object
+          required: [action]
+          properties:
+            action: {const: inspect_binding}
+          additionalProperties: false
+        - type: object
+          required: [action, base_revision, requirement_ids]
+          properties:
+            action: {const: authorize_binding_edit}
+            base_revision: {type: string, minLength: 1}
+            requirement_ids:
+              type: array
+              minItems: 1
+              maxItems: 128
+              uniqueItems: true
+              items: {type: string, minLength: 1}
+              description: Exact requirement IDs selected by the model from inspect_binding for the current natural-language edit request.
+          additionalProperties: false
+        - type: object
+          required: [action, base_revision, binding_result]
+          properties:
+            action: {const: commit_binding}
+            base_revision: {type: string, minLength: 1}
+            binding_result:
+              description: Complete Bind Result. Gateways may send the same object as a JSON string.
+              oneOf:
+                - type: object
+                  required: [schema_version, status, bindings]
+                  properties:
+                    schema_version: {const: agenui.bind-result/v1}
+                    status: {enum: [ready, ready_with_operators, blocked, uncertain]}
+                    bindings:
+                      type: array
+                      maxItems: 512
+                      items:
+                        type: object
+                        required: [requirement_id, target_slot_ids, source_id, knowledge_id]
+                        properties:
+                          requirement_id: {type: string, minLength: 1}
+                          target_slot_ids: {type: array, minItems: 1, uniqueItems: true, items: {type: string, minLength: 1}}
+                          source_id: {type: string, minLength: 1}
+                          knowledge_id: {type: string, minLength: 1}
+                          field_path: {type: string}
+                          action_path: {type: string}
+                          action_source_type: {type: string, enum: [url, event]}
+                          transforms:
+                            type: array
+                            maxItems: 8
+                            items:
+                              type: object
+                              required: [operator_version_id]
+                              properties:
+                                operator_version_id: {type: integer, minimum: 1}
+                                params: {type: object}
+                              additionalProperties: false
+                          ref_key: {type: string}
+                          component_id: {type: string}
+                        additionalProperties: false
+                    issues:
+                      type: array
+                      maxItems: 512
+                      items:
+                        type: object
+                        required: [requirement_id, code, message]
+                        properties:
+                          requirement_id: {type: string, minLength: 1}
+                          code: {type: string, minLength: 1}
+                          message: {type: string, minLength: 1}
+                        additionalProperties: false
+                  additionalProperties: false
+                - {type: string, minLength: 2}
+          additionalProperties: false
+    output_schema:
+      type: object
+      additionalProperties: true
+    timeout_ms: 5000
+    max_inline_bytes: 4194304
+    max_model_context_bytes: 32768
+    max_sse_preview_bytes: 4096
+    artifact_threshold_bytes: 4194304

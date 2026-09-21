@@ -1,0 +1,11 @@
+{
+  "version":"2.0","cardId":"golden-07","name":"Pick and format money chain",
+  "protocol":[{"version":"v0.9","updateComponents":{"surfaceId":"default","components":[{"id":"price","component":"Text","text":{"path":"/product_price"}}]}},{"version":"v0.9","updateDataModel":{"surfaceId":"default","path":"/","value":{}}}],
+  "dataSources":[{"id":"ds-1","endpoint":"http://127.0.0.1:18094/case07","method":"GET","role":"primary","itemsPath":"$.items","entityKey":"id"}],
+  "bindings":[{"slotId":"price.field","dataSourceId":"ds-1","fieldPath":"$.items[*]","refKey":"/product_price","missingPolicy":"block","transforms":[{"operatorVersionId":404,"params":{"matchField":"id","matchValue":"p1","extractField":"price_cents"}},{"operatorVersionId":101}]}],
+  "operators":[
+    {"operatorVersionId":404,"operatorKey":"agenui.list.pick","version":1,"inputSchema":{"type":"array"},"paramsSchema":{"type":"object","required":["matchField","matchValue","extractField"],"properties":{"matchField":{"type":"string"},"matchValue":{},"extractField":{"type":"string"}},"additionalProperties":false},"outputSchema":{"type":"number"},"sourceHash":"sha256:a4b704fc53c6a5be3ab91c0b2a677dc464b29c0297e53f6c9824c9f36e5a599b","language":"javascript","entry":"run","sourceCode":"function run(values, params) { var matches = params.matchField ? values.filter(function(v) { return v[params.matchField] === params.matchValue; }) : [values[params.index || 0]]; if (matches.length !== 1 || matches[0] === undefined) throw new Error(\"pick failed\"); return params.extractField ? matches[0][params.extractField] : matches[0]; }"},
+    {"operatorVersionId":101,"operatorKey":"agenui.scalar.format_money","version":1,"inputSchema":{"type":"number"},"paramsSchema":{"type":"object","additionalProperties":false},"outputSchema":{"type":"string"},"sourceHash":"sha256:3e404026cdf8c178c1bdd5b8e9c29a9fc234d901cc56c264520b50dcbb83fd94","language":"javascript","entry":"run","sourceCode":"function run(value) { return \"¥\" + (Number(value) / 100).toFixed(2); }"}
+  ],
+  "meta":{"contractHash":"sha256:1111111111111111111111111111111111111111111111111111111111111111","designHash":"sha256:2222222222222222222222222222222222222222222222222222222222222222","requirementsHash":"sha256:3333333333333333333333333333333333333333333333333333333333333333"}
+}

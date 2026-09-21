@@ -1,0 +1,7 @@
+{
+  "version":"2.0","cardId":"negative-03","name":"Fixed index out of range",
+  "protocol":[{"version":"v0.9","updateDataModel":{"surfaceId":"default","path":"/","value":{}}}],
+  "dataSources":[{"id":"ds-1","endpoint":"http://127.0.0.1:18094/case02","method":"GET","role":"primary","itemsPath":"$.items","entityKey":"id"}],
+  "bindings":[{"slotId":"price.field","dataSourceId":"ds-1","fieldPath":"$.items[9].price_cents","refKey":"/product_price","missingPolicy":"block"}],
+  "meta":{"contractHash":"sha256:1111111111111111111111111111111111111111111111111111111111111111","designHash":"sha256:2222222222222222222222222222222222222222222222222222222222222222","requirementsHash":"sha256:3333333333333333333333333333333333333333333333333333333333333333"}
+}

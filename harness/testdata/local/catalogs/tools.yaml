@@ -1,0 +1,83 @@
+schema_version: harness.capability-catalog.v1
+enabled:
+  - ask_user@1.0.0
+  - request_approval@1.0.0
+  - read_file@1.0.0
+definitions:
+  - name: read_file
+    version: 1.0.0
+    type: function
+    description: Read a user-visible artifact from the current session by its relative path.
+    allowed_agents: ["*"]
+    handler: harness.read_file
+    input_schema:
+      type: object
+      required: [path]
+      properties:
+        path: {type: string, minLength: 1, maxLength: 240}
+      additionalProperties: false
+    output_schema:
+      type: object
+      required: [path, content]
+      properties:
+        path: {type: string}
+        content: {type: string}
+        artifact_ref: {type: string}
+      additionalProperties: true
+  - name: ask_user
+    version: 1.0.0
+    type: function
+    description: Pause a run and request a structured user response.
+    allowed_agents: ["*"]
+    handler: harness.ask_user
+    input_schema:
+      type: object
+      required: [questions]
+      properties:
+        questions:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [header, question, options]
+            properties:
+              header: {type: string}
+              question: {type: string}
+              options:
+                type: array
+                minItems: 2
+                items:
+                  type: object
+                  required: [label, description]
+                  properties:
+                    label: {type: string}
+                    description: {type: string}
+                  additionalProperties: false
+            additionalProperties: false
+      additionalProperties: false
+    output_schema:
+      type: object
+      required: [response]
+      properties: {response: {}}
+      additionalProperties: false
+  - name: request_approval
+    version: 1.0.0
+    type: function
+    description: Pause a run until a human approves or rejects an action.
+    allowed_agents: ["*"]
+    handler: harness.request_approval
+    input_schema:
+      type: object
+      required: [action]
+      properties:
+        action: {type: string, minLength: 1}
+        reason: {type: string}
+        details: {type: string}
+      additionalProperties: false
+    output_schema:
+      type: object
+      required: [approved]
+      properties:
+        approved: {type: boolean}
+        comment: {type: string}
+      additionalProperties: false

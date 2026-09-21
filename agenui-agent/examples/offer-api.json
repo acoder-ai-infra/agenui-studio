@@ -1,0 +1,38 @@
+{
+  "id": "demo.offer.list",
+  "searchText": "offer offers deal deals promotion promotion list image title current price original price discount refund policy restaurant commerce 商品 优惠 团购 套餐 原价 现价 折扣 图片 退改",
+  "path": "/demo/offers",
+  "description": "Generic offer list with images, current/original prices, promotion labels, policies and detail actions.",
+  "score": 1,
+  "dataSourceId": "demo.offers",
+  "knowledgeEntityId": "demo.offer.list",
+  "responseModel": {
+    "type": "object",
+    "properties": {
+      "items": {"type": "array", "items": {"type": "object", "properties": {
+        "id": {"type": "string"},
+        "title": {"type": "string"},
+        "image_url": {"type": "string"},
+        "price_cents": {"type": "integer"},
+        "original_price_cents": {"type": "integer"},
+        "discount_label": {"type": "string"},
+        "policy": {"type": "string"},
+        "detail_url": {"type": "string"}
+      }}},
+      "catalog_url": {"type": "string"}
+    }
+  },
+  "responseFields": [
+    {"path": "$.items[*].id", "name": "Offer ID", "semantic": "offer stable identifier", "valueType": "string", "scope": "list_item", "entityKey": "id"},
+    {"path": "$.items[*].title", "name": "Offer title", "semantic": "offer deal title name", "valueType": "string", "scope": "list_item"},
+    {"path": "$.items[*].image_url", "name": "Offer image", "semantic": "offer product image media", "valueType": "string", "scope": "list_item"},
+    {"path": "$.items[*].price_cents", "name": "Current price", "semantic": "offer current sale price amount", "valueType": "integer", "unit": "cents", "scope": "list_item"},
+    {"path": "$.items[*].original_price_cents", "name": "Original price", "semantic": "offer original list price amount", "valueType": "integer", "unit": "cents", "scope": "list_item"},
+    {"path": "$.items[*].discount_label", "name": "Promotion label", "semantic": "offer discount promotion label", "valueType": "string", "scope": "list_item"},
+    {"path": "$.items[*].policy", "name": "Offer policy", "semantic": "offer refund cancellation policy", "valueType": "string", "scope": "list_item"},
+    {"path": "$.items[*].detail_url", "name": "Detail URL", "semantic": "open offer detail action url", "valueType": "string", "scope": "list_item"},
+    {"path": "$.catalog_url", "name": "Catalog URL", "semantic": "open complete offer catalog action url", "valueType": "string", "scope": "card"}
+  ],
+  "entity": {"entity_key": "id"},
+  "bindingContract": {"primary_row_list": "$.items"}
+}

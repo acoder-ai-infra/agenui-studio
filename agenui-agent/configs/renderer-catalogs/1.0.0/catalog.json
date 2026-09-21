@@ -1,0 +1,984 @@
+{
+  "$defs": {
+    "CatalogComponentCommon": {
+      "properties": {
+        "weight": {
+          "description": "The relative weight of this component within a Row or Column. This is similar to the CSS 'flex-grow' property. Note: this may ONLY be set when the component is a direct descendant of a Row or Column.",
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "anyComponent": {
+      "discriminator": {
+        "propertyName": "component"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/components/Text"
+        },
+        {
+          "$ref": "#/components/Image"
+        },
+        {
+          "$ref": "#/components/Row"
+        },
+        {
+          "$ref": "#/components/Column"
+        },
+        {
+          "$ref": "#/components/List"
+        },
+        {
+          "$ref": "#/components/Tabs"
+        },
+        {
+          "$ref": "#/components/Button"
+        }
+      ]
+    },
+    "anyFunction": {
+      "oneOf": [
+        {
+          "$ref": "#/functions/required"
+        },
+        {
+          "$ref": "#/functions/regex"
+        },
+        {
+          "$ref": "#/functions/length"
+        },
+        {
+          "$ref": "#/functions/numeric"
+        },
+        {
+          "$ref": "#/functions/email"
+        },
+        {
+          "$ref": "#/functions/formatString"
+        },
+        {
+          "$ref": "#/functions/formatNumber"
+        },
+        {
+          "$ref": "#/functions/formatCurrency"
+        },
+        {
+          "$ref": "#/functions/formatDate"
+        },
+        {
+          "$ref": "#/functions/pluralize"
+        },
+        {
+          "$ref": "#/functions/openUrl"
+        },
+        {
+          "$ref": "#/functions/and"
+        },
+        {
+          "$ref": "#/functions/or"
+        },
+        {
+          "$ref": "#/functions/not"
+        }
+      ]
+    },
+    "theme": {
+      "additionalProperties": true,
+      "properties": {
+        "agentDisplayName": {
+          "description": "Text to be displayed next to the surface to identify the agent or tool that created it.",
+          "type": "string"
+        },
+        "iconUrl": {
+          "description": "A URL for an image that identifies the agent or tool associated with the surface.",
+          "format": "uri",
+          "type": "string"
+        },
+        "primaryColor": {
+          "description": "The primary brand color used for highlights (e.g., primary buttons, active borders). Renderers may generate variants of this color for different contexts. Format: Hexadecimal code (e.g., '#00BFFF').",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "$id": "https://agenui.org/specification/v0_9/renderer-catalogs/1.0.0/catalog.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "catalogId": "https://agenui.org/specification/v0_9/renderer-catalogs/1.0.0/catalog.json",
+  "components": {
+    "Button": {
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "$ref": "#/$defs/CatalogComponentCommon"
+        },
+        {
+          "$ref": "common_types.json#/$defs/Checkable"
+        },
+        {
+          "properties": {
+            "action": {
+              "$ref": "common_types.json#/$defs/Action"
+            },
+            "child": {
+              "$ref": "common_types.json#/$defs/ComponentId",
+              "description": "The ID of the child component. Use a 'Text' component for a labeled button. Only use an 'Icon' if the requirements explicitly ask for an icon-only button. Do NOT define the child component inline."
+            },
+            "component": {
+              "const": "Button"
+            },
+            "variant": {
+              "default": "default",
+              "description": "A hint for the button style. If omitted, a default button style is used. 'primary' indicates this is the main call-to-action button. 'borderless' means the button has no visual border or background, making its child content appear like a clickable link.",
+              "enum": [
+                "default",
+                "primary",
+                "borderless"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "component",
+            "child",
+            "action"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "Column": {
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "$ref": "#/$defs/CatalogComponentCommon"
+        },
+        {
+          "description": "A layout component that arranges its children vertically. To create a grid layout, nest Rows within this Column.",
+          "properties": {
+            "align": {
+              "default": "stretch",
+              "description": "Defines the alignment of children along the cross axis (horizontally). This is similar to the CSS 'align-items' property.",
+              "enum": [
+                "center",
+                "end",
+                "start",
+                "stretch"
+              ],
+              "type": "string"
+            },
+            "children": {
+              "$ref": "common_types.json#/$defs/ChildList",
+              "description": "Defines the children. Use an array of strings for a fixed set of children, or a template object to generate children from a data list. Children cannot be defined inline, they must be referred to by ID."
+            },
+            "component": {
+              "const": "Column"
+            },
+            "justify": {
+              "default": "start",
+              "description": "Defines the arrangement of children along the main axis (vertically). Use 'spaceBetween' to push items to the edges (e.g. header at top, footer at bottom), or 'start'/'end'/'center' to pack them together.",
+              "enum": [
+                "start",
+                "center",
+                "end",
+                "spaceBetween",
+                "spaceAround",
+                "spaceEvenly",
+                "stretch"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "component",
+            "children"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "Image": {
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "$ref": "#/$defs/CatalogComponentCommon"
+        },
+        {
+          "properties": {
+            "component": {
+              "const": "Image"
+            },
+            "description": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "Accessibility text for the image."
+            },
+            "fit": {
+              "default": "fill",
+              "description": "Specifies how the image should be resized to fit its container. This corresponds to the CSS 'object-fit' property.",
+              "enum": [
+                "contain",
+                "cover",
+                "fill",
+                "none",
+                "scaleDown"
+              ],
+              "type": "string"
+            },
+            "url": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "The URL of the image to display."
+            },
+            "variant": {
+              "default": "mediumFeature",
+              "description": "A hint for the image size and style.",
+              "enum": [
+                "icon",
+                "avatar",
+                "smallFeature",
+                "mediumFeature",
+                "largeFeature",
+                "header"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "component",
+            "url"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "List": {
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "$ref": "#/$defs/CatalogComponentCommon"
+        },
+        {
+          "properties": {
+            "align": {
+              "default": "stretch",
+              "description": "Defines the alignment of children along the cross axis.",
+              "enum": [
+                "start",
+                "center",
+                "end",
+                "stretch"
+              ],
+              "type": "string"
+            },
+            "children": {
+              "$ref": "common_types.json#/$defs/ChildList",
+              "description": "Defines the children. Use an array of strings for a fixed set of children, or a template object to generate children from a data list."
+            },
+            "component": {
+              "const": "List"
+            },
+            "direction": {
+              "default": "vertical",
+              "description": "The direction in which the list items are laid out.",
+              "enum": [
+                "vertical",
+                "horizontal"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "component",
+            "children"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "Row": {
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "$ref": "#/$defs/CatalogComponentCommon"
+        },
+        {
+          "description": "A layout component that arranges its children horizontally. To create a grid layout, nest Columns within this Row.",
+          "properties": {
+            "align": {
+              "default": "stretch",
+              "description": "Defines the alignment of children along the cross axis (vertically). This is similar to the CSS 'align-items' property, but uses camelCase values (e.g., 'start').",
+              "enum": [
+                "start",
+                "center",
+                "end",
+                "stretch"
+              ],
+              "type": "string"
+            },
+            "children": {
+              "$ref": "common_types.json#/$defs/ChildList",
+              "description": "Defines the children. Use an array of strings for a fixed set of children, or a template object to generate children from a data list. Children cannot be defined inline, they must be referred to by ID."
+            },
+            "component": {
+              "const": "Row"
+            },
+            "justify": {
+              "default": "start",
+              "description": "Defines the arrangement of children along the main axis (horizontally). Use 'spaceBetween' to push items to the edges, or 'start'/'end'/'center' to pack them together.",
+              "enum": [
+                "center",
+                "end",
+                "spaceAround",
+                "spaceBetween",
+                "spaceEvenly",
+                "start",
+                "stretch"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "component",
+            "children"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "Tabs": {
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "$ref": "#/$defs/CatalogComponentCommon"
+        },
+        {
+          "properties": {
+            "component": {
+              "const": "Tabs"
+            },
+            "tabs": {
+              "description": "An array of objects, where each object defines a tab with a title and a child component.",
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "child": {
+                    "$ref": "common_types.json#/$defs/ComponentId",
+                    "description": "The ID of the child component. Do NOT define the component inline."
+                  },
+                  "title": {
+                    "$ref": "common_types.json#/$defs/DynamicString",
+                    "description": "The tab title."
+                  }
+                },
+                "required": [
+                  "title",
+                  "child"
+                ],
+                "type": "object"
+              },
+              "minItems": 1,
+              "type": "array"
+            }
+          },
+          "required": [
+            "component",
+            "tabs"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "Text": {
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/ComponentCommon"
+        },
+        {
+          "$ref": "#/$defs/CatalogComponentCommon"
+        },
+        {
+          "properties": {
+            "component": {
+              "const": "Text"
+            },
+            "text": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "The text content to display. While simple Markdown formatting is supported (i.e. without HTML, images, or links), utilizing dedicated UI components is generally preferred for a richer and more structured presentation."
+            },
+            "variant": {
+              "default": "body",
+              "description": "A hint for the base text style.",
+              "enum": [
+                "h1",
+                "h2",
+                "h3",
+                "h4",
+                "h5",
+                "caption",
+                "body"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "component",
+            "text"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    }
+  },
+  "description": "Unified catalog of basic AGenUI components and functions.",
+  "functions": {
+    "and": {
+      "description": "Performs a logical AND operation on a list of boolean values.",
+      "properties": {
+        "args": {
+          "properties": {
+            "values": {
+              "description": "The list of boolean values to evaluate.",
+              "items": {
+                "$ref": "common_types.json#/$defs/DynamicBoolean"
+              },
+              "minItems": 2,
+              "type": "array"
+            }
+          },
+          "required": [
+            "values"
+          ],
+          "type": "object",
+          "unevaluatedProperties": false
+        },
+        "call": {
+          "const": "and"
+        },
+        "returnType": {
+          "const": "boolean"
+        }
+      },
+      "required": [
+        "call",
+        "args"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "email": {
+      "description": "Checks that the value is a valid email address.",
+      "properties": {
+        "args": {
+          "properties": {
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object",
+          "unevaluatedProperties": false
+        },
+        "call": {
+          "const": "email"
+        },
+        "returnType": {
+          "const": "boolean"
+        }
+      },
+      "required": [
+        "call",
+        "args"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "formatCurrency": {
+      "description": "Formats a number as a currency string.",
+      "properties": {
+        "args": {
+          "properties": {
+            "currency": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "The ISO 4217 currency code (e.g., 'USD', 'EUR')."
+            },
+            "decimals": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Optional. The number of decimal places to show. Defaults to 0 or 2 depending on locale."
+            },
+            "grouping": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "Optional. If true, uses locale-specific grouping separators (e.g. '1,000'). If false, returns raw digits (e.g. '1000'). Defaults to true."
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "The monetary amount."
+            }
+          },
+          "required": [
+            "currency",
+            "value"
+          ],
+          "type": "object",
+          "unevaluatedProperties": false
+        },
+        "call": {
+          "const": "formatCurrency"
+        },
+        "returnType": {
+          "const": "string"
+        }
+      },
+      "required": [
+        "call",
+        "args"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "formatDate": {
+      "description": "Formats a timestamp into a string using a pattern.",
+      "properties": {
+        "args": {
+          "properties": {
+            "format": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "A Unicode TR35 date pattern string.\n\nToken Reference:\n- Year: 'yy' (26), 'yyyy' (2026)\n- Month: 'M' (1), 'MM' (01), 'MMM' (Jan), 'MMMM' (January)\n- Day: 'd' (1), 'dd' (01), 'E' (Tue), 'EEEE' (Tuesday)\n- Hour (12h): 'h' (1-12), 'hh' (01-12) - requires 'a' for AM/PM\n- Hour (24h): 'H' (0-23), 'HH' (00-23) - Military Time\n- Minute: 'mm' (00-59)\n- Second: 'ss' (00-59)\n- Period: 'a' (AM/PM)\n\nExamples:\n- 'MMM dd, yyyy' -\u003e 'Jan 16, 2026'\n- 'HH:mm' -\u003e '14:30' (Military)\n- 'h:mm a' -\u003e '2:30 PM'\n- 'EEEE, d MMMM' -\u003e 'Friday, 16 January'"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicValue",
+              "description": "The date to format."
+            }
+          },
+          "required": [
+            "format",
+            "value"
+          ],
+          "type": "object",
+          "unevaluatedProperties": false
+        },
+        "call": {
+          "const": "formatDate"
+        },
+        "returnType": {
+          "const": "string"
+        }
+      },
+      "required": [
+        "call",
+        "args"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "formatNumber": {
+      "description": "Formats a number with the specified grouping and decimal precision.",
+      "properties": {
+        "args": {
+          "properties": {
+            "decimals": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "Optional. The number of decimal places to show. Defaults to 0 or 2 depending on locale."
+            },
+            "grouping": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "Optional. If true, uses locale-specific grouping separators (e.g. '1,000'). If false, returns raw digits (e.g. '1000'). Defaults to true."
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "The number to format."
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object",
+          "unevaluatedProperties": false
+        },
+        "call": {
+          "const": "formatNumber"
+        },
+        "returnType": {
+          "const": "string"
+        }
+      },
+      "required": [
+        "call",
+        "args"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "formatString": {
+      "description": "Performs string interpolation of data model values and other functions in the catalog functions list and returns the resulting string. The value string can contain interpolated expressions in the `${expression}` format. Supported expression types include: JSON Pointer paths to the data model (e.g., `${/absolute/path}` or `${relative/path}`), and client-side function calls (e.g., `${now()}`). Function arguments must be named (e.g., `${formatDate(value:${/currentDate}, format:'MM-dd')}`). To include a literal `${` sequence, escape it as `\\${`.",
+      "properties": {
+        "args": {
+          "properties": {
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object",
+          "unevaluatedProperties": false
+        },
+        "call": {
+          "const": "formatString"
+        },
+        "returnType": {
+          "const": "string"
+        }
+      },
+      "required": [
+        "call",
+        "args"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "length": {
+      "description": "Checks string length constraints.",
+      "properties": {
+        "args": {
+          "anyOf": [
+            {
+              "required": [
+                "min"
+              ]
+            },
+            {
+              "required": [
+                "max"
+              ]
+            }
+          ],
+          "properties": {
+            "max": {
+              "description": "The maximum allowed length.",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "min": {
+              "description": "The minimum allowed length.",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object",
+          "unevaluatedProperties": false
+        },
+        "call": {
+          "const": "length"
+        },
+        "returnType": {
+          "const": "boolean"
+        }
+      },
+      "required": [
+        "call",
+        "args"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "not": {
+      "description": "Performs a logical NOT operation on a boolean value.",
+      "properties": {
+        "args": {
+          "properties": {
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean",
+              "description": "The boolean value to negate."
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object",
+          "unevaluatedProperties": false
+        },
+        "call": {
+          "const": "not"
+        },
+        "returnType": {
+          "const": "boolean"
+        }
+      },
+      "required": [
+        "call",
+        "args"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "numeric": {
+      "description": "Checks numeric range constraints.",
+      "properties": {
+        "args": {
+          "anyOf": [
+            {
+              "required": [
+                "min"
+              ]
+            },
+            {
+              "required": [
+                "max"
+              ]
+            }
+          ],
+          "properties": {
+            "max": {
+              "description": "The maximum allowed value.",
+              "type": "number"
+            },
+            "min": {
+              "description": "The minimum allowed value.",
+              "type": "number"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicNumber"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object",
+          "unevaluatedProperties": false
+        },
+        "call": {
+          "const": "numeric"
+        },
+        "returnType": {
+          "const": "boolean"
+        }
+      },
+      "required": [
+        "call",
+        "args"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "openUrl": {
+      "description": "Opens the specified URL in a browser or handler. This function has no return value.",
+      "properties": {
+        "args": {
+          "additionalProperties": false,
+          "properties": {
+            "url": {
+              "description": "The URL to open.",
+              "format": "uri",
+              "type": "string"
+            }
+          },
+          "required": [
+            "url"
+          ],
+          "type": "object"
+        },
+        "call": {
+          "const": "openUrl"
+        },
+        "returnType": {
+          "const": "void"
+        }
+      },
+      "required": [
+        "call",
+        "args"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "or": {
+      "description": "Performs a logical OR operation on a list of boolean values.",
+      "properties": {
+        "args": {
+          "properties": {
+            "values": {
+              "description": "The list of boolean values to evaluate.",
+              "items": {
+                "$ref": "common_types.json#/$defs/DynamicBoolean"
+              },
+              "minItems": 2,
+              "type": "array"
+            }
+          },
+          "required": [
+            "values"
+          ],
+          "type": "object",
+          "unevaluatedProperties": false
+        },
+        "call": {
+          "const": "or"
+        },
+        "returnType": {
+          "const": "boolean"
+        }
+      },
+      "required": [
+        "call",
+        "args"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "pluralize": {
+      "description": "Returns a localized string based on the Common Locale Data Repository (CLDR) plural category of the count (zero, one, two, few, many, other). Requires an 'other' fallback. For English, just use 'one' and 'other'.",
+      "properties": {
+        "args": {
+          "properties": {
+            "few": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "String for the 'few' category (e.g., small groups in Slavic languages)."
+            },
+            "many": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "String for the 'many' category (e.g., large groups in various languages)."
+            },
+            "one": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "String for the 'one' category (e.g., 1 item)."
+            },
+            "other": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "The default/fallback string (used for general plural cases)."
+            },
+            "two": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "String for the 'two' category (used in Arabic, Welsh, etc.)."
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicNumber",
+              "description": "The numeric value used to determine the plural category."
+            },
+            "zero": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "String for the 'zero' category (e.g., 0 items)."
+            }
+          },
+          "required": [
+            "value",
+            "other"
+          ],
+          "type": "object",
+          "unevaluatedProperties": false
+        },
+        "call": {
+          "const": "pluralize"
+        },
+        "returnType": {
+          "const": "string"
+        }
+      },
+      "required": [
+        "call",
+        "args"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "regex": {
+      "description": "Checks that the value matches a regular expression string.",
+      "properties": {
+        "args": {
+          "properties": {
+            "pattern": {
+              "description": "The regex pattern to match against.",
+              "type": "string"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            }
+          },
+          "required": [
+            "value",
+            "pattern"
+          ],
+          "type": "object",
+          "unevaluatedProperties": false
+        },
+        "call": {
+          "const": "regex"
+        },
+        "returnType": {
+          "const": "boolean"
+        }
+      },
+      "required": [
+        "call",
+        "args"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "required": {
+      "description": "Checks that the value is not null, undefined, or empty.",
+      "properties": {
+        "args": {
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "description": "The value to check."
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "call": {
+          "const": "required"
+        },
+        "returnType": {
+          "const": "boolean"
+        }
+      },
+      "required": [
+        "call",
+        "args"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    }
+  },
+  "title": "AGenUI Basic Catalog"
+}

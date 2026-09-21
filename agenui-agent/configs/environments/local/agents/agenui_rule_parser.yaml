@@ -1,0 +1,22 @@
+agent_id: agenui_rule_parser
+agent_type: agenui_rule_parser
+version: 1.0.0
+status: enabled
+name: AGenUI rule parser
+description: Converts uploaded Markdown design rules into a typed immutable revision.
+runtime:
+    type: eino
+    mode: react
+    timeout_ms: 900000
+    max_turns: 1
+    checkpoint: false
+    stream: true
+prompt:
+    prompt_ref: prompt://agenui/rule-parser
+    prompt_version: 1.0.0
+model:
+    max_tokens: 65536
+    reasoning_mode: disabled
+protocol_policy:
+    streaming: true
+    output_format: json

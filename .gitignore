@@ -1,0 +1,57 @@
+# Build output
+/bin/
+/dist/
+*.exe
+
+# Local runtime data
+/data/
+/var/
+*.db
+*.sqlite
+*.db-wal
+*.db-shm
+*.sqlite-wal
+*.sqlite-shm
+*.log
+
+# Generated local AGenUI runtime artifacts
+/agenui-agent/artifacts/
+/agenui-agent/var
+/agenui-agent/.env*
+/agenui-agent/agenui-agent
+/harness/harness
+/harness/var/
+/harness/coverage.out
+/harness/configs/**/*.local.yaml
+/agenui-agent/configs/environments/local/.local-model-harness.yaml
+/agenui-agent/configs/environments/local/.renderer-harness-*.yaml
+/agenui-agent/configs/design-public/.worker-*/
+/agenui-agent/configs/design-public/revisions/local-*/
+/agenui-agent/configs/design-public/revisions/rev-*/
+/agenui-agent/evaluation-output/
+/web/coverage/
+/packages/renderer/coverage/
+
+# Local agent working notes and failure logs
+/.ai-harness/
+/.test_intermediates/
+/coverage.out
+
+# Node
+node_modules/
+.next/
+.next*/
+out/
+*.tsbuildinfo
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Secrets and local overrides
+.env
+.env.local
+config.local.json
+.npmrc

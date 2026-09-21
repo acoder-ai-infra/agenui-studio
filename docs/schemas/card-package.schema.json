@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenui-studio/schemas/card-package-1.0.json",
+  "title": "Card Execution Package",
+  "description": "Self-contained, runtime-executable card artifact produced by agenui-studio. All operator and data source references are expanded; no studio-internal IDs remain.",
+  "type": "object",
+  "required": ["version", "cardId", "name", "protocol", "dataSources", "bindings", "meta"],
+  "properties": {
+    "version": {"const": "1.0"},
+    "cardId": {"type": "string", "minLength": 1},
+    "name": {"type": "string"},
+    "contract": {
+      "type": "object",
+      "description": "Frozen Content Contract (provenance).",
+      "required": ["contract_id", "revision", "schema_version", "status", "change_origin", "content_hash", "goal", "type", "contents"],
+      "properties": {
+        "contract_id": {"type": "string"},
+        "revision": {"type": "integer", "minimum": 1},
+        "base_revision": {"type": "integer", "minimum": 1},
+        "schema_version": {"const": "content_contract.v1"},
+        "status": {"type": "string"},
+        "change_origin": {"type": "string"},
+        "content_hash": {"type": "string"},
+        "goal": {"type": "string"},
+        "type": {"enum": ["single", "list"]},
+        "contents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+              "id": {"type": "string"},
+              "description": {"type": "string"},
+              "required": {"type": "boolean"}
+            }
+          }
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+              "id": {"type": "string"},
+              "description": {"type": "string"}
+            }
+          }
+        },
+        "constraints": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "protocol": {
+      "type": "array",
+      "minItems": 1,
+      "description": "AGenUI v0.9 message array: createSurface / updateComponents / updateDataModel.",
+      "items": {"type": "object"}
+    },
+    "dataSources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "endpoint", "role"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^ds-[0-9]+$"},
+          "name": {"type": "string"},
+          "description": {"type": "string"},
+          "endpoint": {"type": "string", "format": "uri"},
+          "method": {"type": "string"},
+          "headers": {"type": "object", "additionalProperties": {"type": "string"}},
+          "role": {"enum": ["primary", "supplement"]},
+          "itemsPath": {"type": "string"},
+          "entityKey": {"type": "string"},
+          "params": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name"],
+              "properties": {
+                "name": {"type": "string"},
+                "in": {"enum": ["query", "body"]},
+                "type": {"type": "string"},
+                "required": {"type": "boolean"},
+                "template": {"type": "string"},
+                "value": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["slotId", "dataSourceId", "fieldPath", "target", "scope", "missingPolicy"],
+        "properties": {
+          "slotId": {"type": "string"},
+          "requirementId": {"type": "string"},
+          "dataSourceId": {"type": "string", "pattern": "^ds-[0-9]+$"},
+          "fieldPath": {"type": "string"},
+          "target": {"type": "string"},
+          "scope": {"enum": ["card", "list_item"]},
+          "missingPolicy": {"enum": ["block", "hide", "fallback"]},
+          "fallbackValue": {},
+          "transform": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["operatorVersionId"],
+              "properties": {
+                "operatorVersionId": {"type": "integer", "minimum": 1},
+                "params": {"type": "object"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "operators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["operatorVersionId", "version", "sourceHash", "language", "entry", "sourceCode"],
+        "properties": {
+          "operatorVersionId": {"type": "integer", "minimum": 1},
+          "version": {"type": "integer", "minimum": 1},
+          "sourceHash": {"type": "string"},
+          "language": {"enum": ["javascript", "js", "typescript", "ts"]},
+          "languageVersion": {"type": "string"},
+          "entry": {"type": "string"},
+          "sourceCode": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "type", "payload"],
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "type": {"type": "string"},
+          "payload": {
+            "type": "object",
+            "required": ["dataSourceId", "path", "componentId"],
+            "properties": {
+              "dataSourceId": {"type": "string", "pattern": "^ds-[0-9]+$"},
+              "path": {"type": "string", "minLength": 1},
+              "componentId": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "required": ["contractHash", "designHash", "requirementsHash", "generatedAt", "generator"],
+      "properties": {
+        "contractHash": {"type": "string"},
+        "designHash": {"type": "string"},
+        "requirementsHash": {"type": "string"},
+        "generatedAt": {"type": "string", "format": "date-time"},
+        "generator": {"type": "string"}
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+data/
+var/
+bin/
+dist/
+web/node_modules/
+web/.next/
+packages/renderer/node_modules/
+packages/renderer/dist/
+**/node_modules/
+.git/
+*.db
+*.sqlite

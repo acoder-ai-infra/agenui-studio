@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS mcp_debug_records (
+  row_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '自增物理主键，仅用于 InnoDB 聚簇索引',
+  tenant_id VARCHAR(255) NOT NULL COMMENT 'MCP 调试记录所属租户标识',
+  record_id VARCHAR(128) NOT NULL COMMENT '租户内唯一调试记录 ID',
+  server_id VARCHAR(128) NOT NULL COMMENT '被调试的 MCP Server 业务标识',
+  operator_id VARCHAR(255) NOT NULL COMMENT '触发调试的管理用户标识',
+  operation VARCHAR(32) NOT NULL COMMENT '调试操作类型：list_tools 或 call_tool',
+  tool_name VARCHAR(255) NOT NULL DEFAULT '' COMMENT '工具调用名称，list_tools 为空',
+  snapshot_id VARCHAR(128) NOT NULL DEFAULT '' COMMENT '调试时冻结的 MCP capability snapshot ID',
+  request_json JSON NOT NULL COMMENT '脱敏后的调试请求输入',
+  response_json JSON NOT NULL COMMENT '脱敏后的调试输出或错误摘要',
+  error_code VARCHAR(128) NOT NULL DEFAULT '' COMMENT '错误码，成功为空',
+  error_message TEXT NOT NULL COMMENT '脱敏后的错误信息，成功为空',
+  latency_ms BIGINT NOT NULL COMMENT '调试操作耗时，毫秒',
+  created_at_ms BIGINT NOT NULL COMMENT '记录创建时间，Unix 毫秒',
+  identity_digest BINARY(32) NOT NULL COMMENT '应用计算的 tenant_id、record_id 唯一身份摘要',
+  PRIMARY KEY (row_id),
+  UNIQUE KEY uk_mcp_debug_record_identity (identity_digest),
+  KEY idx_mcp_debug_record_server_created (tenant_id(64), server_id(64), created_at_ms DESC, record_id(64)),
+  CONSTRAINT chk_mcp_debug_record_operation CHECK (operation IN ('list_tools', 'call_tool')),
+  CONSTRAINT chk_mcp_debug_record_latency CHECK (latency_ms >= 0),
+  CONSTRAINT chk_mcp_debug_record_created_at CHECK (created_at_ms >= 0)
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='租户 MCP Inspector 调试历史输入输出记录';

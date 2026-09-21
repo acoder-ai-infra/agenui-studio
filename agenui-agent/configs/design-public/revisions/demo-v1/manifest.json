@@ -1,0 +1,7 @@
+{
+  "schema_version": "design_knowledge_manifest.v1",
+  "revision_id": "demo-v1",
+  "status": "published",
+  "index_ref": "index.json",
+  "index_hash": "sha256:cbd0a39fe5a248b9787987400c3603f41ce074af562d1682047d37915011c829"
+}

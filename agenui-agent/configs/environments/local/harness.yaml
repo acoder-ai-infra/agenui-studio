@@ -1,0 +1,32 @@
+schema_version: harness.composition.v1
+# The source Harness only accepts its existing runtime environment enum. This
+# open-source deployment template therefore uses `local`; its public/private asset
+# boundary is defined by this profile and deployment mounts, not a new enum.
+environment: local
+service: {name: agenui-studio-agent, address: ":18081", read_header_timeout_ms: 5000, shutdown_timeout_seconds: 10}
+paths: {runtime_root: ../../../var/harness, data_dir: data, log_dir: log, run_dir: run, temp_dir: tmp}
+logging:
+  development: true
+  level: debug
+  output: both
+  recent_buffer_items: 2000
+  file:
+    name: harness.log
+    max_size_mb: 100
+    max_backups: 10
+    max_age_days: 14
+    compress: true
+    local_time: true
+components:
+  models: {source: database}
+  storage: storage.yaml
+  artifact: artifact.yaml
+  auth: auth.yaml
+  redis: redis.yaml
+  skills: {source: file, path: ../../harness/catalogs/skills.yaml}
+  tools: ../../harness/catalogs/tools.yaml
+  mcp: {source: file, path: ../../harness/catalogs/mcp.local.yaml}
+  agents: {source: file, path: agents}
+  prompts: {source: file, path: ../../harness/prompts.yaml}
+runtime: {default_agent_id: agenui_agent, max_concurrent: 8, context_messages: 64}
+features: {a2a: false}

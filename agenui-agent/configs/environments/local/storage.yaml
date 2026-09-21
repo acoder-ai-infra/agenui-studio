@@ -1,0 +1,7 @@
+# Public default: durable Harness state in deployment-owned SQLite.
+# Switch to ordinary MySQL through the source Harness storage contract if needed.
+backend: sqlite
+config:
+  # Keep Studio resources and durable Harness state in one local SQLite file.
+  # The path is resolved from var/harness/data.
+  path: ../../agenui/studio.db

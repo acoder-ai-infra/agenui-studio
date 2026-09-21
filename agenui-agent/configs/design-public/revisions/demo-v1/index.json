@@ -1,0 +1,197 @@
+{
+  "schema_version": "design_knowledge_index.v1",
+  "revision_id": "demo-v1",
+  "documents": [
+    {
+      "id": "element.primary-action",
+      "kind": "element",
+      "version": "1.0.0",
+      "status": "enabled",
+      "summary": "One explicit user action for the enclosing card.",
+      "tags": [
+        "public",
+        "demo",
+        "element",
+        "action"
+      ],
+      "applies_to": [
+        "layout.summary-card",
+        "layout.information-action",
+        "layout.repeated-item-list"
+      ],
+      "content_ref": "elements/primary_action.md",
+      "content_hash": "sha256:61a914a928df02ce8fa42bcf70d188ce77bfe1d0f5c33e6731bd5bcdc649f8a6"
+    },
+    {
+      "id": "element.repeated-item",
+      "kind": "element",
+      "version": "1.0.0",
+      "status": "enabled",
+      "summary": "A stable prototype used for every row in a short collection.",
+      "tags": [
+        "public",
+        "demo",
+        "element",
+        "repeated"
+      ],
+      "applies_to": [
+        "layout.repeated-item-list"
+      ],
+      "not_for": [
+        "layout.summary-card",
+        "layout.information-action"
+      ],
+      "content_ref": "elements/repeated_item.md",
+      "content_hash": "sha256:65f3237c822147c2cdbc456fc9bdd294122876d71baa4e9a5a25335d7e45a11d"
+    },
+    {
+      "id": "element.supporting-text",
+      "kind": "element",
+      "version": "1.0.0",
+      "status": "enabled",
+      "summary": "Secondary context or a short label-value detail.",
+      "tags": [
+        "public",
+        "demo",
+        "element"
+      ],
+      "applies_to": [
+        "layout.summary-card",
+        "layout.information-action"
+      ],
+      "content_ref": "elements/supporting_text.md",
+      "content_hash": "sha256:03daf56cff53ea8092d775a739d50c233ddab33e2f39bb122301045bc9a573d5"
+    },
+    {
+      "id": "element.title",
+      "kind": "element",
+      "version": "1.0.0",
+      "status": "enabled",
+      "summary": "A stable primary text element.",
+      "tags": [
+        "public",
+        "demo",
+        "element"
+      ],
+      "applies_to": [
+        "layout.summary-card",
+        "layout.information-action",
+        "layout.repeated-item-list"
+      ],
+      "content_ref": "elements/title.md",
+      "content_hash": "sha256:45bb21eb9e4acedf629fb4cc3bd3fb2f47deb091879a446a2fb9511ac236d190"
+    },
+    {
+      "id": "layout.information-action",
+      "kind": "layout",
+      "version": "1.1.0",
+      "status": "enabled",
+      "summary": "Public information card with aligned details and one primary action.",
+      "tags": [
+        "public",
+        "demo",
+        "layout",
+        "action"
+      ],
+      "applies_to": [
+        "single object",
+        "label value details"
+      ],
+      "not_for": [
+        "multiple peer actions"
+      ],
+      "requires": [
+        "element.title",
+        "element.supporting-text",
+        "element.primary-action"
+      ],
+      "content_ref": "layouts/information-action.md",
+      "content_hash": "sha256:10a456370ab72d2e4baf95b2473302c95ae92d73e6d33904f9a2ed1ffbb510bc"
+    },
+    {
+      "id": "layout.repeated-item-list",
+      "kind": "layout",
+      "version": "1.1.0",
+      "status": "enabled",
+      "summary": "Public repeated-item list card with explicit loading and empty states.",
+      "tags": [
+        "public",
+        "demo",
+        "layout",
+        "list"
+      ],
+      "applies_to": [
+        "short repeated collection"
+      ],
+      "not_for": [
+        "single object confirmation"
+      ],
+      "requires": [
+        "element.title",
+        "element.repeated-item",
+        "element.primary-action"
+      ],
+      "content_ref": "layouts/repeated-item-list.md",
+      "content_hash": "sha256:0c87c64455ad0104e0f0ab63d8f01b234494b3671ccd694a69212c5767a10d5f"
+    },
+    {
+      "id": "layout.summary-card",
+      "kind": "layout",
+      "version": "1.1.0",
+      "status": "enabled",
+      "summary": "Public summary card with stable title and optional supporting text.",
+      "tags": [
+        "public",
+        "demo",
+        "layout"
+      ],
+      "applies_to": [
+        "single object",
+        "one primary action"
+      ],
+      "not_for": [
+        "repeated collection"
+      ],
+      "requires": [
+        "element.title",
+        "element.supporting-text",
+        "element.primary-action"
+      ],
+      "content_ref": "layouts/summary-card.md",
+      "content_hash": "sha256:a2bbc7ec46b169805b9120cc7fcff9cd73154d76f04314dc5f58e6d44c636f83"
+    },
+    {
+      "id": "rule.public-demo.card-structure",
+      "kind": "rule",
+      "version": "1.0.0",
+      "status": "enabled",
+      "summary": "Structural and visibility constraints for the bundled layouts.",
+      "tags": [
+        "public",
+        "demo",
+        "rule"
+      ],
+      "applies_to": [
+        "layout.summary-card",
+        "layout.information-action",
+        "layout.repeated-item-list"
+      ],
+      "content_ref": "rules/card_structure.md",
+      "content_hash": "sha256:85f1975da4532c8f4d5c5a8ca2cb33099a09e7255f808269f15eff289c839465"
+    },
+    {
+      "id": "rule.public-demo.foundation",
+      "kind": "rule",
+      "version": "1.0.0",
+      "status": "enabled",
+      "summary": "Public global constraints shared by the bundled demo layouts.",
+      "tags": [
+        "public",
+        "demo",
+        "foundation"
+      ],
+      "content_ref": "rules/foundation.md",
+      "content_hash": "sha256:835c628106cdc5f4d5adeb16c5e2ae8af2c0da11d32192a71adc018af644549b"
+    }
+  ]
+}

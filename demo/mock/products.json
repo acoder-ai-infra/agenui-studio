@@ -1,0 +1,7 @@
+{
+  "items": [
+    {"id":"product-1","title":"City Museum Pass","price_cents":6800,"distance_meters":850,"detail_url":"https://example.com/products/product-1"},
+    {"id":"product-2","title":"Lakeside Day Tour","price_cents":12800,"distance_meters":12400,"detail_url":"https://example.com/products/product-2"}
+  ],
+  "catalog_url": "https://example.com/products"
+}

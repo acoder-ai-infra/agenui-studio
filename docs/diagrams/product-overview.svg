@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="920" viewBox="0 0 1600 920">
+  <defs>
+    <linearGradient id="hero-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F8FAFC"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7C9CFF"/>
+      <stop offset="1" stop-color="#62E7C8"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#64748B" flood-opacity="0.16"/>
+    </filter>
+    <filter id="soft-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#64748B" flood-opacity="0.12"/>
+    </filter>
+    <clipPath id="workbench-clip">
+      <rect x="474" y="174" width="652" height="600" rx="24"/>
+    </clipPath>
+    <style>
+      text { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif; }
+      .eyebrow { fill:#2563EB; font-size:15px; font-weight:700; letter-spacing:2.2px; }
+      .title { fill:#0F172A; font-size:43px; font-weight:760; letter-spacing:-1px; }
+      .subtitle { fill:#64748B; font-size:19px; }
+      .card-title { fill:#0F172A; font-size:20px; font-weight:720; }
+      .card-copy { fill:#64748B; font-size:15px; }
+      .mini { fill:#334155; font-size:13px; font-weight:600; }
+      .step { fill:#2563EB; font-size:13px; font-weight:800; letter-spacing:1px; }
+      .rail-title { fill:#0F172A; font-size:15px; font-weight:700; }
+      .rail-copy { fill:#64748B; font-size:12px; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="920" rx="36" fill="url(#hero-bg)"/>
+  <circle cx="1440" cy="-40" r="360" fill="#EFF6FF" opacity="0.9"/>
+  <circle cx="110" cy="850" r="300" fill="#ECFDF5" opacity="0.9"/>
+  <path d="M80 120 H1520" stroke="#E2E8F0"/>
+
+  <text x="80" y="60" class="eyebrow">AGENT-GENERATED UI · FROM INTENT TO RUNTIME</text>
+  <text x="80" y="105" class="title">一句话，生成真正可执行的界面</text>
+  <text x="1520" y="82" text-anchor="end" class="subtitle">模型负责语义与设计 · 工具保证边界与交付</text>
+
+  <!-- Left capability cards -->
+  <g filter="url(#soft-shadow)">
+    <rect x="70" y="178" width="350" height="198" rx="22" fill="#FFFFFF" stroke="#CBD5E1"/>
+    <rect x="88" y="197" width="48" height="28" rx="14" fill="#EFF6FF"/>
+    <text x="112" y="216" text-anchor="middle" class="step">01</text>
+    <text x="150" y="218" class="card-title">需求契约，而非猜字段</text>
+    <rect x="92" y="244" width="306" height="70" rx="14" fill="#F8FAFC" stroke="#CBD5E1"/>
+    <text x="110" y="270" class="mini">“生成科技好物商品卡，绑定真实数据，</text>
+    <text x="110" y="294" class="mini">后续只改按钮样式。”</text>
+    <rect x="92" y="328" width="112" height="28" rx="14" fill="#EFF6FF"/>
+    <text x="148" y="347" text-anchor="middle" class="mini">可附参考图</text>
+    <rect x="214" y="328" width="166" height="28" rx="14" fill="#F5F3FF"/>
+    <text x="297" y="347" text-anchor="middle" class="mini">Content / Edit Contract</text>
+  </g>
+
+  <g filter="url(#soft-shadow)">
+    <rect x="70" y="405" width="350" height="207" rx="22" fill="#FFFFFF" stroke="#CBD5E1"/>
+    <rect x="88" y="424" width="48" height="28" rx="14" fill="#EFF6FF"/>
+    <text x="112" y="443" text-anchor="middle" class="step">02</text>
+    <text x="150" y="445" class="card-title">规则驱动，不是模板套壳</text>
+    <text x="92" y="481" class="card-copy">Markdown 规则 → immutable revision → 热加载</text>
+    <g transform="translate(92 504)">
+      <rect width="142" height="40" rx="10" fill="#ECFDF5" stroke="#34D399"/>
+      <text x="71" y="25" text-anchor="middle" class="mini">布局与元素规则</text>
+      <rect x="152" width="106" height="40" rx="10" fill="#ECFDF5" stroke="#34D399"/>
+      <text x="205" y="25" text-anchor="middle" class="mini">Catalog</text>
+    </g>
+    <text x="92" y="580" class="card-copy">模型选择设计；Host 只验证真实引用与版本。</text>
+  </g>
+
+  <!-- Workbench evidence -->
+  <g filter="url(#shadow)">
+    <rect x="458" y="158" width="684" height="632" rx="30" fill="#FFFFFF" stroke="#CBD5E1"/>
+    <image xlink:href="__WORKBENCH_DATA_URI__" x="474" y="174" width="652" height="600" preserveAspectRatio="xMidYMid slice" clip-path="url(#workbench-clip)"/>
+    <rect x="494" y="194" width="142" height="30" rx="15" fill="#EFF6FF" stroke="#60A5FA"/>
+    <circle cx="512" cy="209" r="5" fill="#4DE2BE"/>
+    <text x="526" y="214" class="mini">REAL STUDIO RUN</text>
+    <rect x="952" y="194" width="148" height="30" rx="15" fill="#F5F3FF" stroke="#A78BFA"/>
+    <text x="1026" y="214" text-anchor="middle" class="mini">INSPECTABLE DSL</text>
+  </g>
+  <rect x="600" y="760" width="400" height="54" rx="27" fill="url(#accent)"/>
+  <text x="800" y="793" text-anchor="middle" fill="#07111F" font-size="17" font-weight="800">VERSIONED DSL WORKSPACE · CAS · SCHEMA</text>
+
+  <!-- Right capability cards -->
+  <g filter="url(#soft-shadow)">
+    <rect x="1180" y="178" width="350" height="198" rx="22" fill="#FFFFFF" stroke="#CBD5E1"/>
+    <rect x="1198" y="197" width="48" height="28" rx="14" fill="#EFF6FF"/>
+    <text x="1222" y="216" text-anchor="middle" class="step">03</text>
+    <text x="1260" y="218" class="card-title">数据与算子成为可执行绑定</text>
+    <path d="M1204 258 H1504" stroke="#CBD5E1"/>
+    <text x="1204" y="286" class="mini">Source field</text>
+    <text x="1355" y="286" text-anchor="middle" fill="#62E7C8" font-size="17">→</text>
+    <text x="1504" y="286" text-anchor="end" class="mini">UI property</text>
+    <rect x="1263" y="304" width="184" height="38" rx="19" fill="#ECFDF5" stroke="#34D399"/>
+    <text x="1355" y="328" text-anchor="middle" class="mini">transform(operator, params)</text>
+    <text x="1204" y="360" class="card-copy">数据源、动作、算子随卡包展开，不依赖 Studio ID。</text>
+  </g>
+
+  <g filter="url(#soft-shadow)">
+    <rect x="1180" y="405" width="350" height="207" rx="22" fill="#FFFFFF" stroke="#CBD5E1"/>
+    <rect x="1198" y="424" width="48" height="28" rx="14" fill="#EFF6FF"/>
+    <text x="1222" y="443" text-anchor="middle" class="step">04</text>
+    <text x="1260" y="445" class="card-title">多轮编辑，指哪改哪</text>
+    <g transform="translate(1204 475)">
+      <rect width="88" height="38" rx="19" fill="#EFF6FF"/><text x="44" y="24" text-anchor="middle" class="mini">Target</text>
+      <rect x="99" width="92" height="38" rx="19" fill="#F5F3FF"/><text x="145" y="24" text-anchor="middle" class="mini">Change</text>
+      <rect x="202" width="120" height="38" rx="19" fill="#ECFDF5"/><text x="262" y="24" text-anchor="middle" fill="#047857" font-size="13" font-weight="700">Protected</text>
+    </g>
+    <text x="1204" y="548" class="card-copy">真实属性索引 + 基准 hash + revision fencing</text>
+    <text x="1204" y="577" class="card-copy">不靠中文关键词，不重写未指定组件与绑定。</text>
+  </g>
+
+  <!-- Bottom capability rail -->
+  <g filter="url(#soft-shadow)">
+    <rect x="70" y="840" width="1460" height="56" rx="18" fill="#FFF7ED" stroke="#FB923C"/>
+    <text x="96" y="874" class="rail-title">05  PORTABLE DELIVERY</text>
+    <text x="332" y="874" class="rail-copy">Final Artifact</text>
+    <text x="458" y="874" fill="#5F7FA8" font-size="17">→</text>
+    <text x="490" y="874" class="rail-title">Runtime Package</text>
+    <text x="642" y="874" fill="#5F7FA8" font-size="17">→</text>
+    <text x="674" y="874" class="rail-copy">Download</text>
+    <text x="774" y="874" class="rail-copy">HTTP Callback</text>
+    <text x="914" y="874" class="rail-copy">MQ Consumer</text>
+    <text x="1052" y="874" class="rail-copy">Your Runtime</text>
+    <rect x="1265" y="854" width="238" height="30" rx="15" fill="#ECFDF5"/>
+    <text x="1384" y="874" text-anchor="middle" fill="#047857" font-size="13" font-weight="700">LOAD · VALIDATE · EXECUTE</text>
+  </g>
+
+  <!-- Directional connectors -->
+  <path d="M420 277 H452" stroke="#94A3B8" stroke-width="2" stroke-dasharray="5 6"/><path d="M420 510 H452" stroke="#94A3B8" stroke-width="2" stroke-dasharray="5 6"/>
+  <path d="M1148 277 H1180" stroke="#94A3B8" stroke-width="2" stroke-dasharray="5 6"/><path d="M1148 510 H1180" stroke="#94A3B8" stroke-width="2" stroke-dasharray="5 6"/>
+</svg>

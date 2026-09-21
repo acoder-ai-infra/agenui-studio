@@ -1,0 +1,3 @@
+# Local development only. Production must replace this with a source-compatible
+# authenticator before exposing the service.
+mode: insecure

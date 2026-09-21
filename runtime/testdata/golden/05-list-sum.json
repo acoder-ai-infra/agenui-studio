@@ -1,0 +1,8 @@
+{
+  "version":"2.0","cardId":"golden-05","name":"List sum",
+  "protocol":[{"version":"v0.9","updateComponents":{"surfaceId":"default","components":[{"id":"total","component":"Text","text":{"path":"/total"}}]}},{"version":"v0.9","updateDataModel":{"surfaceId":"default","path":"/","value":{}}}],
+  "dataSources":[{"id":"ds-1","endpoint":"http://127.0.0.1:18094/case05","method":"GET","role":"primary"}],
+  "bindings":[{"slotId":"total.field","dataSourceId":"ds-1","fieldPath":"$.values[*]","refKey":"/total","missingPolicy":"block","transforms":[{"operatorVersionId":402}]}],
+  "operators":[{"operatorVersionId":402,"operatorKey":"agenui.list.sum","version":1,"inputSchema":{"type":"array","items":{"type":"number"}},"paramsSchema":{"type":"object","additionalProperties":false},"outputSchema":{"type":"number"},"sourceHash":"sha256:b125db4b8a5921eaca865087739cfceaaa54ecb6197b6f5423eae80cca280770","language":"javascript","entry":"run","sourceCode":"function run(values, params) { return values.reduce(function(sum, v) { var n = Number(params.field ? v[params.field] : v); if (!Number.isFinite(n)) throw new Error(\"not number\"); return sum + n; }, 0); }"}],
+  "meta":{"contractHash":"sha256:1111111111111111111111111111111111111111111111111111111111111111","designHash":"sha256:2222222222222222222222222222222222222222222222222222222222222222","requirementsHash":"sha256:3333333333333333333333333333333333333333333333333333333333333333"}
+}

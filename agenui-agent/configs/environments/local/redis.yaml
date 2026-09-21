@@ -1,0 +1,10 @@
+enabled: false
+addrs: []
+username: default
+password_env: HARNESS_REDIS_PASSWORD
+key_prefix: "agenui:harness:public:"
+cache_ttl_seconds: 600
+hot_ttl_seconds: 60
+snapshot_ttl_seconds: 86400
+quota_lease_ttl_seconds: 120
+quota_commit_ttl_seconds: 300

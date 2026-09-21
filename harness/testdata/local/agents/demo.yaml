@@ -1,0 +1,15 @@
+agent_id: demo
+agent_type: assistant
+version: v1
+status: enabled
+runtime:
+  type: native
+  mode: direct
+  timeout_ms: 90000
+  stream: true
+prompt:
+  prompt_ref: prompt://harness/demo
+  prompt_version: v1
+protocol_policy:
+  streaming: true
+  output_format: markdown

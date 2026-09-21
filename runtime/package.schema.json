@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenui.org/schemas/card-execution-package-2.0.json",
+  "title": "AGenUI Card Execution Package",
+  "type": "object",
+  "required": ["version", "cardId", "protocol", "dataSources", "bindings", "meta"],
+  "properties": {
+    "version": {"const": "2.0"},
+    "cardId": {"type": "string", "minLength": 1},
+    "name": {"type": "string"},
+    "contract": {},
+    "protocol": {"type": "array", "minItems": 1},
+    "dataSources": {"type": "array", "minItems": 1},
+    "bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["slotId", "dataSourceId", "fieldPath", "refKey", "missingPolicy"],
+        "properties": {
+          "slotId": {"type": "string", "minLength": 1},
+          "requirementId": {"type": "string"},
+          "dataSourceId": {"type": "string", "minLength": 1},
+          "fieldPath": {"type": "string", "minLength": 1},
+          "refKey": {"type": "string", "pattern": "^/"},
+          "missingPolicy": {"enum": ["block", "hide", "fallback"]},
+          "fallbackValue": {},
+          "transforms": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["operatorVersionId"],
+              "properties": {
+                "operatorVersionId": {"type": "integer", "minimum": 1},
+                "params": {"type": "object"}
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "operators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["operatorVersionId", "operatorKey", "version", "inputSchema", "paramsSchema", "outputSchema", "sourceHash", "language", "sourceCode", "entry"],
+        "properties": {
+          "operatorVersionId": {"type": "integer", "minimum": 1},
+          "operatorKey": {"type": "string", "minLength": 1},
+          "version": {"type": "integer", "minimum": 1},
+          "inputSchema": {"type": ["object", "boolean"]},
+          "paramsSchema": {"type": ["object", "boolean"]},
+          "outputSchema": {"type": ["object", "boolean"]},
+          "sourceHash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+          "language": {"enum": ["javascript", "js", "typescript", "ts"]},
+          "languageVersion": {"type": "string"},
+          "sourceCode": {"type": "string", "minLength": 1},
+          "entry": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "actions": {"type": "array"},
+    "meta": {"type": "object"}
+  },
+  "additionalProperties": false
+}

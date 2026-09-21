@@ -1,0 +1,8 @@
+{
+  "version":"2.0","cardId":"golden-04","name":"List join",
+  "protocol":[{"version":"v0.9","updateComponents":{"surfaceId":"default","components":[{"id":"summary","component":"Text","text":{"path":"/tag_summary"}}]}},{"version":"v0.9","updateDataModel":{"surfaceId":"default","path":"/","value":{}}}],
+  "dataSources":[{"id":"ds-1","endpoint":"http://127.0.0.1:18094/case04","method":"GET","role":"primary"}],
+  "bindings":[{"slotId":"summary.field","dataSourceId":"ds-1","fieldPath":"$.tags[*]","refKey":"/tag_summary","missingPolicy":"block","transforms":[{"operatorVersionId":401,"params":{"separator":" · "}}]}],
+  "operators":[{"operatorVersionId":401,"operatorKey":"agenui.list.join","version":1,"inputSchema":{"type":"array"},"paramsSchema":{"type":"object","properties":{"separator":{"type":"string"}},"additionalProperties":false},"outputSchema":{"type":"string"},"sourceHash":"sha256:db756221fe52e3688230c9abe4057862d884e002056fe86b61924c1c4b7500fb","language":"javascript","entry":"run","sourceCode":"function run(values, params) { return values.map(function(v) { return params.field ? v[params.field] : v; }).join(params.separator || \" | \"); }"}],
+  "meta":{"contractHash":"sha256:1111111111111111111111111111111111111111111111111111111111111111","designHash":"sha256:2222222222222222222222222222222222222222222222222222222222222222","requirementsHash":"sha256:3333333333333333333333333333333333333333333333333333333333333333"}
+}

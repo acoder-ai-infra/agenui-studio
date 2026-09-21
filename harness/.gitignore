@@ -1,0 +1,36 @@
+# OS and editors
+._*
+.DS_Store
+.classpath
+.project
+.settings/**
+.idea/
+*.iml
+.vscode/
+*~
+\#*\#
+.\#*
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+
+# Build and test output
+/harness
+/bin/
+/dist/
+*.test
+coverage.out
+
+# Local configuration and runtime state
+.env
+.env.*
+!.env.example
+/configs/**/*.local.yaml
+*.db
+*.db-*
+*.db-wal
+*.db-shm
+/var/
+/.tmp/

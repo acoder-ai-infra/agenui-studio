@@ -1,0 +1,36 @@
+{
+  "id": "demo.travel-status.list",
+  "searchText": "travel route road weather temperature rain alert ETA arrival status list transit 出行 路线 路况 天气 温度 风险 到达时间",
+  "path": "/demo/travel-status",
+  "description": "Generic travel-status list with route, region, weather symbol, temperature, alert and detail action.",
+  "score": 1,
+  "dataSourceId": "demo.travel-status",
+  "knowledgeEntityId": "demo.travel-status.list",
+  "responseModel": {
+    "type": "object",
+    "properties": {
+      "items": {"type": "array", "items": {"type": "object", "properties": {
+        "id": {"type": "string"},
+        "name": {"type": "string"},
+        "region": {"type": "string"},
+        "weather_icon": {"type": "string"},
+        "temperature": {"type": "string"},
+        "alert": {"type": "string"},
+        "detail_url": {"type": "string"}
+      }}},
+      "list_url": {"type": "string"}
+    }
+  },
+  "responseFields": [
+    {"path": "$.items[*].id", "name": "Route ID", "semantic": "travel route stable identifier", "valueType": "string", "scope": "list_item", "entityKey": "id"},
+    {"path": "$.items[*].name", "name": "Route name", "semantic": "travel route road name", "valueType": "string", "scope": "list_item"},
+    {"path": "$.items[*].region", "name": "Region", "semantic": "travel route region", "valueType": "string", "scope": "list_item"},
+    {"path": "$.items[*].weather_icon", "name": "Weather symbol", "semantic": "travel weather icon emoji", "valueType": "string", "scope": "list_item"},
+    {"path": "$.items[*].temperature", "name": "Temperature", "semantic": "travel route temperature", "valueType": "string", "scope": "list_item"},
+    {"path": "$.items[*].alert", "name": "Travel alert", "semantic": "travel weather risk alert ETA", "valueType": "string", "scope": "list_item"},
+    {"path": "$.items[*].detail_url", "name": "Detail URL", "semantic": "open travel route detail action url", "valueType": "string", "scope": "list_item"},
+    {"path": "$.list_url", "name": "List URL", "semantic": "open complete travel status list action url", "valueType": "string", "scope": "card"}
+  ],
+  "entity": {"entity_key": "id"},
+  "bindingContract": {"primary_row_list": "$.items"}
+}

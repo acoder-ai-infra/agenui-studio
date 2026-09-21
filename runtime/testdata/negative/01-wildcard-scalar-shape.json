@@ -1,0 +1,8 @@
+{
+  "version":"2.0","cardId":"negative-01","name":"Wildcard array into scalar operator",
+  "protocol":[{"version":"v0.9","updateDataModel":{"surfaceId":"default","path":"/","value":{}}}],
+  "dataSources":[{"id":"ds-1","endpoint":"http://127.0.0.1:18094/case03","method":"GET","role":"primary","itemsPath":"$.items","entityKey":"id"}],
+  "bindings":[{"slotId":"price.field","dataSourceId":"ds-1","fieldPath":"$.items[*].price_cents","refKey":"/product_price","missingPolicy":"block","transforms":[{"operatorVersionId":101}]}],
+  "operators":[{"operatorVersionId":101,"operatorKey":"agenui.scalar.format_money","version":1,"inputSchema":{"type":"number"},"paramsSchema":{"type":"object","additionalProperties":false},"outputSchema":{"type":"string"},"sourceHash":"sha256:3e404026cdf8c178c1bdd5b8e9c29a9fc234d901cc56c264520b50dcbb83fd94","language":"javascript","entry":"run","sourceCode":"function run(value) { return \"¥\" + (Number(value) / 100).toFixed(2); }"}],
+  "meta":{"contractHash":"sha256:1111111111111111111111111111111111111111111111111111111111111111","designHash":"sha256:2222222222222222222222222222222222222222222222222222222222222222","requirementsHash":"sha256:3333333333333333333333333333333333333333333333333333333333333333"}
+}

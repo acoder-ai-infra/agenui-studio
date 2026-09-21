@@ -1,0 +1,43 @@
+agent_id: agenui_binder
+agent_type: agenui_binder
+version: 1.0.0
+status: enabled
+name: AGenUI 数据绑定 Agent
+description: 将已确认的界面语义绑定到数据源、字段、动作与可选算子。
+process_presentation:
+    stage:
+        id: data_binding
+        label: 配置数据与动作
+        order: 30
+runtime:
+    type: eino
+    mode: deep_agent
+    timeout_ms: 300000
+    max_turns: 16
+    stream: true
+prompt:
+    prompt_ref: prompt://agenui/binder
+    prompt_version: 1.0.0
+model:
+    max_tokens: 16384
+    reasoning_mode: disabled
+tools:
+    - name: ask_user
+      version: 1.0.1
+    - name: agenui_execute_operator
+      version: 1.1.0
+    - name: agenui_workspace
+      version: 2.2.0
+tool_policy:
+    mcp_servers:
+        - agenui-knowrag
+gateway:
+    provider_kind: local_agent
+orchestration:
+    default_mode: deep_agent
+protocol_policy:
+    streaming: true
+    output_format: markdown
+extensions:
+    tool_call_interceptors:
+        - agenui.task_interceptor.v1

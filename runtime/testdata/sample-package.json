@@ -1,0 +1,57 @@
+{
+  "version": "2.0",
+  "cardId": "demo-product-list",
+  "name": "Product list",
+  "protocol": [
+    {"version":"v0.9","createSurface":{"surfaceId":"card","catalogId":"agenui"}},
+    {"version":"v0.9","updateComponents":{"surfaceId":"card","components":[
+      {"id":"root","component":"Column","children":["heading","products","more"]},
+      {"id":"heading","component":"Text","text":"Products"},
+      {"id":"products","component":"List","children":{"componentId":"product","path":"/items"}},
+      {"id":"product","component":"Column","children":["title","price","distance"]},
+      {"id":"title","component":"Text","text":{"path":"title"}},
+      {"id":"price","component":"Text","text":{"path":"price"}},
+      {"id":"distance","component":"Text","text":{"path":"distance"}},
+      {"id":"more","component":"Button","child":"more-label","action":{"event":"products.more"}},
+      {"id":"more-label","component":"Text","text":"More"}
+    ]}},
+    {"version":"v0.9","updateDataModel":{"surfaceId":"card","path":"/","value":{"items":[],"__actions":{"more":{"payload":{}}}}}}
+  ],
+  "dataSources": [{
+    "id":"ds-1","name":"Product API","endpoint":"http://127.0.0.1:18090/mock/products","method":"GET",
+    "headers":{"X-Demo-Run":"{{trace}}"},"role":"primary","itemsPath":"$.items","entityKey":"id",
+    "params":[{"name":"query","in":"query","type":"string","template":"{{query}}"}]
+  }],
+  "bindings": [
+    {"slotId":"item.title","requirementId":"product.title","dataSourceId":"ds-1","fieldPath":"$.items[*].title","refKey":"/items[*]/title","missingPolicy":"block"},
+    {"slotId":"item.price","requirementId":"product.price","dataSourceId":"ds-1","fieldPath":"$.items[*].price_cents","refKey":"/items[*]/price","missingPolicy":"block","transforms":[{"operatorVersionId":101,"params":{"currency":"¥","suffix":""}}]},
+    {"slotId":"item.distance","requirementId":"product.distance","dataSourceId":"ds-1","fieldPath":"$.items[*].distance_meters","refKey":"/items[*]/distance","missingPolicy":"hide","transforms":[{"operatorVersionId":102,"params":{"unit":"metric"}}]}
+  ],
+  "operators": [
+    {
+      "operatorVersionId":101,"operatorKey":"agenui.scalar.format_money","version":1,
+      "inputSchema":{"type":"number"},
+      "paramsSchema":{"type":"object","properties":{"currency":{"type":"string","maxLength":8},"suffix":{"type":"string","maxLength":16}},"additionalProperties":false},
+      "outputSchema":{"type":"string"},
+      "sourceHash":"sha256:d4907e04cc4701d5c2d071db5c2b682dba064db45cdbc516f77f7b439b1b5e20",
+      "language":"typescript","languageVersion":"ES2022","entry":"run",
+      "sourceCode":"interface MoneyParams { currency?: string; suffix?: string; }\nfunction run(value: unknown, params?: MoneyParams): unknown {\n  const amount = Number(value);\n  if (Number.isNaN(amount)) return value;\n  return (params?.currency || \"¥\") + (amount / 100).toFixed(2) + (params?.suffix || \"\");\n}"
+    },
+    {
+      "operatorVersionId":102,"operatorKey":"agenui.scalar.format_distance","version":1,
+      "inputSchema":{"type":"number"},
+      "paramsSchema":{"type":"object","properties":{"unit":{"enum":["metric"]}},"additionalProperties":false},
+      "outputSchema":{"type":"string"},
+      "sourceHash":"sha256:740dda78d10ba1356a85d40d19305cde66a05aa609364069fcd428f92fb8b8b1",
+      "language":"typescript","languageVersion":"ES2022","entry":"run",
+      "sourceCode":"interface DistanceParams { unit?: \"metric\"; }\nfunction run(value: unknown, _params?: DistanceParams): unknown {\n  const meters = Number(value);\n  if (Number.isNaN(meters)) return value;\n  return meters < 1000 ? Math.round(meters) + \"m\" : (meters / 1000).toFixed(1) + \"km\";\n}"
+    }
+  ],
+  "actions": [{"id":"products.more","name":"More","type":"url","payload":{"dataSourceId":"ds-1","path":"$.catalog_url","componentId":"more"}}],
+  "meta": {
+    "contractHash":"sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "designHash":"sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "requirementsHash":"sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "generatedAt":"2026-09-04T00:00:00Z","generator":"agenui-runtime-conformance"
+  }
+}

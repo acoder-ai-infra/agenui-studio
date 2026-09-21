@@ -1,0 +1,49 @@
+# Build and test output
+/bin/
+/dist/
+/output*/
+/_output*/
+/_build/
+*.exe
+*.test
+
+# Local runtime data and logs
+/data/
+/var/
+/logs/
+/artifacts/
+*.db
+*.sqlite
+*.db-wal
+*.db-shm
+*.sqlite-wal
+*.sqlite-shm
+
+# Local secrets and overrides
+.env
+.env.*
+!.env.example
+config.local.json
+
+# Generated Harness configuration snapshots
+configs/environments/local/.local-model-harness.yaml
+configs/environments/local/.renderer-harness-*.yaml
+
+# Local Go workspace and language caches
+go.work
+go.work.sum
+.venv/
+__pycache__/
+*.pyc
+
+# Editors and operating systems
+.DS_Store
+._*
+.idea/
+.vscode/
+*.iml
+*.swp
+*.un~
+*~
+\#*\#
+.\#*

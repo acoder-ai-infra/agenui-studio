@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS tenants (
+  row_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '自增物理主键，仅用于 InnoDB 聚簇索引',
+  tenant_id VARCHAR(255) NOT NULL COMMENT '租户全局唯一业务标识，贯穿所有数据隔离维度',
+  name VARCHAR(255) NOT NULL COMMENT '租户展示名称',
+  owner VARCHAR(255) NOT NULL DEFAULT '' COMMENT '租户负责人或所属团队',
+  plan VARCHAR(64) NOT NULL DEFAULT '' COMMENT '租户套餐标签，如 Enterprise/Growth/Sandbox',
+  status VARCHAR(32) NOT NULL DEFAULT 'active' COMMENT '租户生命周期状态：active 正常、paused 暂停（暂停后不可用密钥登录）',
+  secret_key VARCHAR(16) NOT NULL COMMENT '租户登录密钥，短随机字母数字，控制台用它登录并切换租户，明文存储与返回',
+  revision BIGINT NOT NULL COMMENT '乐观锁版本号，创建为 1，每次更新递增',
+  created_at_ms BIGINT NOT NULL COMMENT '创建时间，Unix 毫秒',
+  updated_at_ms BIGINT NOT NULL COMMENT '最近更新时间，Unix 毫秒',
+  updated_by VARCHAR(255) NOT NULL COMMENT '最近一次更新的操作人标识',
+  PRIMARY KEY (row_id),
+  UNIQUE KEY uk_tenant_id (tenant_id),
+  UNIQUE KEY uk_tenant_secret_key (secret_key),
+  KEY idx_tenant_updated (updated_at_ms DESC, tenant_id(64)),
+  CONSTRAINT chk_tenant_revision CHECK (revision >= 1),
+  CONSTRAINT chk_tenant_created_at CHECK (created_at_ms >= 0),
+  CONSTRAINT chk_tenant_updated_at CHECK (updated_at_ms >= created_at_ms)
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='平台级租户目录与登录密钥事实表';

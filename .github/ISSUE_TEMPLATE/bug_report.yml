@@ -1,0 +1,42 @@
+name: Bug report
+description: Report a reproducible AGenUI Studio problem
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Please remove credentials and private business data before submitting.
+  - type: textarea
+    id: observed
+    attributes:
+      label: What happened?
+      description: Include the user action, visible result, and the exact error.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction
+      description: Provide the smallest sequence that reproduces the issue.
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: Revision
+      description: Git commit, tag, or container version.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Go and Node versions, model provider/model, and browser if relevant. Do not include API keys.
+    validations:
+      required: true

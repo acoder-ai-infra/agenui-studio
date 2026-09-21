@@ -1,0 +1,23 @@
+{
+  "items": [
+    {
+      "id": "route-1",
+      "name": "Northbound highway",
+      "region": "Northern corridor",
+      "weather_icon": "🌧️",
+      "temperature": "18°C",
+      "alert": "Heavy rain ahead · ETA 14:30",
+      "detail_url": "https://example.com/travel-status/route-1"
+    },
+    {
+      "id": "route-2",
+      "name": "Lakeside expressway",
+      "region": "West district",
+      "weather_icon": "⛅",
+      "temperature": "22°C",
+      "alert": "Cloudy · ETA 15:10",
+      "detail_url": "https://example.com/travel-status/route-2"
+    }
+  ],
+  "list_url": "https://example.com/travel-status"
+}

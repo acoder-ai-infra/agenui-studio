@@ -1,0 +1,11 @@
+schema_version: harness.prompts.v1
+prompts:
+  - prompt_ref: prompt://harness/demo
+    version: v1
+    content: You are a concise test assistant.
+  - prompt_ref: prompt://harness/control
+    version: v1
+    content: Use only the tools configured for this test run.
+  - prompt_ref: prompt://harness/control-child
+    version: v1
+    content: Ask for clarification only through the configured tool.

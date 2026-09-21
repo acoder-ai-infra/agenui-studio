@@ -1,0 +1,25 @@
+{
+  "items": [
+    {
+      "id": "offer-1",
+      "title": "Weekend brunch for two",
+      "image_url": "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=240&q=80",
+      "price_cents": 3960,
+      "original_price_cents": 4690,
+      "discount_label": "Save $7.30",
+      "policy": "Refund any time before redemption",
+      "detail_url": "https://example.com/offers/offer-1"
+    },
+    {
+      "id": "offer-2",
+      "title": "Chef's tasting menu for two",
+      "image_url": "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=240&q=80",
+      "price_cents": 2430,
+      "original_price_cents": 2900,
+      "discount_label": "Member special",
+      "policy": "Free cancellation until the day before",
+      "detail_url": "https://example.com/offers/offer-2"
+    }
+  ],
+  "catalog_url": "https://example.com/offers"
+}

@@ -1,0 +1,57 @@
+name: agenui-studio
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  go:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ["1.26.x"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Build Harness
+        working-directory: harness
+        run: go build ./...
+      - name: Test Harness
+        working-directory: harness
+        run: |
+          go test ./...
+          go vet ./...
+      - name: Build AGenUI Agent
+        working-directory: agenui-agent
+        run: go build ./...
+      - name: Test AGenUI Agent
+        working-directory: agenui-agent
+        run: |
+          go test ./...
+          go vet ./...
+      - name: Test Runtime
+        run: |
+          go test ./...
+          go vet ./...
+      # TODO(release): regenerate committed npm lockfiles against the public
+      # npm registry before the first public release.
+      - name: Test and build renderer
+        working-directory: packages/renderer
+        run: |
+          npm ci
+          npm test
+          npm run build
+      - name: Test and build management console
+        working-directory: web
+        run: |
+          npm ci
+          npm test
+          npm run build

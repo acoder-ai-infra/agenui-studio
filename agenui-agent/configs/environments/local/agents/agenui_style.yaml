@@ -1,0 +1,47 @@
+agent_id: agenui_style
+agent_type: agenui_style
+version: 1.0.0
+status: enabled
+name: AGenUI 内容与样式设计 Agent
+description: 基于冻结 Content Contract 完成能力预检，并根据 Renderer Catalog 和设计规则生成界面与语义槽位；不选择最终 API、字段路径或算子版本。
+process_presentation:
+    stage:
+        id: ui_generation
+        label: 生成界面
+        order: 20
+runtime:
+    type: eino
+    mode: deep_agent
+    timeout_ms: 300000
+    max_turns: 24
+    stream: true
+prompt:
+    prompt_ref: prompt://agenui/style
+    prompt_version: 1.3.0
+model:
+    max_tokens: 24576
+    reasoning_mode: disabled
+tools:
+    - name: ask_user
+      version: 1.0.1
+    - name: agenui_preflight_capabilities
+      version: 1.0.0
+    - name: agenui_read_design_knowledge
+      version: 1.0.0
+    - name: agenui_workspace
+      version: 2.2.0
+tool_policy:
+    mcp_servers:
+        - agenui-knowrag
+gateway:
+    provider_kind: local_agent
+orchestration:
+    default_mode: deep_agent
+protocol_policy:
+    streaming: true
+    output_format: markdown
+extensions:
+    before_model_hooks:
+        - agenui.model_input.design_knowledge.v1
+    tool_call_interceptors:
+        - agenui.task_interceptor.v1
