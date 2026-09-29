@@ -9,16 +9,16 @@ selection and rollback remain host responsibilities.
 
 [简体中文](card-package.zh-CN.md)
 
-Version: `1.0`. A complete example lives at
-[`demo/packages/sample-package.json`](../demo/packages/sample-package.json);
+Version: `2.0`. A complete example lives at
+[`runtime/testdata/sample-package.json`](../runtime/testdata/sample-package.json);
 the machine-readable schema is
-[`docs/schemas/card-package.schema.json`](schemas/card-package.schema.json).
+[`runtime/package.schema.json`](../runtime/package.schema.json).
 
 ## Top-level shape
 
 ```jsonc
 {
-  "version": "1.0",
+  "version": "2.0",
   "cardId": "demo-product-list",
   "name": "Product list",
   "contract": { /* frozen Content Contract (provenance, not executed) */ },
@@ -44,7 +44,7 @@ Exactly one source is `primary`; the rest are `supplement`.
 | `id` | Package-local ID (`ds-1`, `ds-2`, ...) — never an internal studio ID. |
 | `endpoint`, `method`, `headers` | How to call the API. |
 | `role` | `primary` (entity list owner) or `supplement` (same-entity completion). |
-| `itemsPath` | Dot path to the entity array inside the response (primary and list supplements). |
+| `itemsPath` | Path to the entity array inside the response, such as `$.items` (no wildcards). |
 | `entityKey` | Field used to match supplement records onto primary entities. |
 | `params[]` | Request params; `template` supports `{{name}}` placeholders filled from execution params. |
 
@@ -57,17 +57,27 @@ complete the same entities. No chaining, no cycles.
 | --- | --- |
 | `slotId` / `requirementId` | Semantic origin (design slot, compiled requirement). |
 | `dataSourceId` | Must reference a `dataSources[].id`. |
-| `fieldPath` | Dot path inside the entity (list_item) or response (card). |
-| `target` | Where the value lands: entity field (list_item) or DataModel path (card). |
-| `scope` | `card` or `list_item`. |
+| `fieldPath` | Complete source path inside the response, such as `$.product.price` or `$.items[*].price_cents`. |
+| `refKey` | Complete absolute DataModel destination, such as `/product/price` or `/items[*]/price`. |
 | `missingPolicy` | `block` (fail the execution), `hide` (skip the slot), `fallback` (use `fallbackValue`). |
-| `transform[]` | Ordered operator invocations; each `operatorVersionId` must reference `operators[].operatorVersionId`. |
+| `fallbackValue` | Value used for a missing source value when `missingPolicy` is `fallback`, before transforms run. |
+| `transforms[]` | Ordered operator invocations; each `operatorVersionId` must reference `operators[].operatorVersionId`. |
+
+Paths support object keys, fixed array indexes, and up to two wildcard levels.
+When `refKey` contains wildcards, `fieldPath` must have the same wildcard count;
+the transform chain runs for each matched value and preserves its coordinates.
+Without target wildcards, the complete source value or projected array enters
+the chain and the result is assigned once. Runtime does not infer list
+aggregation or select the first item.
 
 ## operators
 
 Each entry is the backend's published Operator Detail data without a field-name
-adapter: `operatorVersionId`, numeric `version`, `sourceHash`, `language`,
-`languageVersion`, `sourceCode`, and `entry`. TypeScript is
+adapter: `operatorVersionId`, `operatorKey`, numeric `version`, `inputSchema`,
+`paramsSchema`, `outputSchema`, `sourceHash`, `language`, `sourceCode`, and
+`entry`, plus optional `languageVersion`. `sourceHash` must be the SHA-256 hash
+of the exact `sourceCode`, prefixed with `sha256:`. Runtime validates the actual
+input, parameters, and output against the embedded schemas. TypeScript is
 transformed to JavaScript before Goja executes
 `entry(value, params)` in a fresh VM with timeouts and size limits. This is
 in-process execution, not a hostile-code memory boundary. An operator failure
@@ -89,11 +99,17 @@ attribution; `generator` identifies the producing studio version.
 
 ## Validation rules (enforced by `runtime.Load`)
 
-- `version`, `cardId` and `protocol` are required.
+- `version` must be `2.0`; `cardId` and a non-empty `protocol` are required.
 - Exactly one primary data source.
 - Every binding references a declared data source; every transform's
   `operatorVersionId` references a declared published operator version.
-- Binding scope is `card` or `list_item`.
+- Every binding has a valid source `fieldPath`, absolute `refKey`, and missing
+  policy; wildcard coordinates follow the rules above.
+- Supplement bindings target wildcard entity fields and require the same
+  non-empty `entityKey` on primary and supplement sources.
+- Every operator includes its published key, version, executable code, matching
+  source hash, and three valid schemas; invocation parameters match `paramsSchema`.
+- Contract, Design, and Requirements provenance hashes are required in `meta`.
 - Every action references a declared source and provides a path and component.
 
 ## Delivery boundary

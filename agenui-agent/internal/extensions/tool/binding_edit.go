@@ -53,12 +53,16 @@ func (t *PrepareBindingEdit) Invoke(ctx context.Context, call extension.Function
 		TenantID: call.Ctx.TenantID, UserID: call.Ctx.UserID,
 		SessionID: call.Ctx.SessionID,
 	}
+	// A binding continuation starts from the newest durable Binding artifact,
+	// including an incomplete/blocked plan. Requiring Final here makes the
+	// advertised "continue binding" flow impossible for exactly the sessions
+	// that still need data or action mappings.
 	baseRunID, err := t.provider.artifacts.LatestRunID(
-		ctx, baseIdentity, stepartifact.StepFinal,
+		ctx, baseIdentity, stepartifact.StepBinding,
 	)
 	if err != nil {
 		if errors.Is(err, stepartifact.ErrNotFound) {
-			return nil, errors.New("prepare binding edit: no completed generation exists for this session")
+			return nil, errors.New("prepare binding edit: no binding baseline exists for this session")
 		}
 		return nil, err
 	}

@@ -103,9 +103,12 @@ func TestSystemOperatorDefinitionsExecuteThroughPublishedDetail(t *testing.T) {
 		applied bool
 	}{
 		{"money", "agenui.scalar.format_money", float64(6800), map[string]any{"currency": "¥"}, "¥68.00", true},
+		{"money normalizes strict numeric string", "agenui.scalar.format_money", "1999", map[string]any{"currency": "CNY"}, "CNY19.99", true},
+		{"money rejects display string", "agenui.scalar.format_money", "19.99元", map[string]any{"currency": "¥"}, nil, false},
 		{"money rejects array", "agenui.scalar.format_money", []any{float64(6800)}, nil, nil, false},
 		{"distance meters", "agenui.scalar.format_distance", float64(850), nil, "850m", true},
 		{"distance kilometers", "agenui.scalar.format_distance", float64(12400), nil, "12.4km", true},
+		{"distance normalizes strict numeric string", "agenui.scalar.format_distance", "1500", map[string]any{"unit": "metric"}, "1.5km", true},
 		{"distance rejects array", "agenui.scalar.format_distance", []any{float64(850)}, nil, nil, false},
 		{"join scalars", "agenui.list.join", []any{"a", "b"}, map[string]any{"separator": ","}, "a,b", true},
 		{"join field", "agenui.list.join", []any{map[string]any{"name": "a"}, map[string]any{"name": "b"}}, map[string]any{"field": "name", "separator": " · "}, "a · b", true},
@@ -229,6 +232,74 @@ func TestOperatorSchemaMigrationAndValidation(t *testing.T) {
 	}
 	if _, err := normalizeOperatorSchema(json.RawMessage(`[]`), anySchema); err == nil {
 		t.Fatal("array schema root must be rejected")
+	}
+}
+
+func TestLocalAdminBackfillsPublishedOperatorSchemasAfterKnowledgeMigration(t *testing.T) {
+	db := openSystemOperatorDB(t)
+	if err := (&Handler{db: db}).EnsureSchema(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	// Existing knowledge facts predate Schema publication, while the local
+	// immutable versions already retain the complete published contract.
+	if _, err := db.Exec(`CREATE TABLE knowrag_operator (
+ operator_id INTEGER PRIMARY KEY, operator_key TEXT NOT NULL,
+ summary TEXT NOT NULL, published INTEGER NOT NULL DEFAULT 1);
+INSERT INTO knowrag_operator(operator_id,operator_key,summary,published) VALUES
+ (101,'custom.published','Published custom operator',1),
+ (102,'custom.hidden','Unpublished knowledge fact',0),
+ (103,'custom.draft','Draft local version',1),
+ (104,'external.operator','Fact without a local version',1)`); err != nil {
+		t.Fatal(err)
+	}
+	wantInput := `{"type":"number"}`
+	wantParams := `{"type":"object","properties":{"suffix":{"type":"string"}}}`
+	wantOutput := `{"type":"string"}`
+	for _, version := range []struct {
+		id     int
+		key    string
+		status int
+	}{
+		{101, "custom.published", 1},
+		{102, "custom.hidden", 1},
+		{103, "custom.draft", 0},
+		{105, "custom.unindexed", 1},
+	} {
+		if _, err := db.Exec(`INSERT INTO local_operator_version
+ (id,runtime_id,operator_key,version_no,status,name,language,entry_name,source_code,source_hash,
+ input_schema_json,params_schema_json,output_schema_json,gmt_create)
+ VALUES(?,?,?,1,?,?,'javascript','run','function run(v){return String(v)}','hash',?,?,?,'now')`,
+			version.key, version.id, version.key, version.status, version.key,
+			wantInput, wantParams, wantOutput); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for pass := 0; pass < 2; pass++ {
+		if _, err := New(db); err != nil {
+			t.Fatal(err)
+		}
+		var input, params, output string
+		if err := db.QueryRow(`SELECT input_schema_json,params_schema_json,output_schema_json
+ FROM knowrag_operator WHERE operator_id=101`).Scan(&input, &params, &output); err != nil {
+			t.Fatal(err)
+		}
+		if input != wantInput || params != wantParams || output != wantOutput {
+			t.Fatalf("pass %d: published custom schemas = %s, %s, %s; want %s, %s, %s",
+				pass, input, params, output, wantInput, wantParams, wantOutput)
+		}
+		for _, id := range []int{102, 103, 104} {
+			if err := db.QueryRow(`SELECT input_schema_json,params_schema_json,output_schema_json
+ FROM knowrag_operator WHERE operator_id=?`, id).Scan(&input, &params, &output); err != nil {
+				t.Fatal(err)
+			}
+			if input != "true" || params != "true" || output != "true" {
+				t.Fatalf("unpublished, draft, or external fact %d was rewritten", id)
+			}
+		}
+		if varCount(t, db, `SELECT COUNT(*) FROM knowrag_operator WHERE operator_id=102 AND published=0`) != 1 ||
+			varCount(t, db, `SELECT COUNT(*) FROM knowrag_operator WHERE operator_id=105`) != 0 {
+			t.Fatal("Schema migration changed knowledge publication state")
+		}
 	}
 }
 
