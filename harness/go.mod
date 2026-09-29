@@ -6,7 +6,7 @@ require (
 	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/a2aproject/a2a-go/v2 v2.2.0
 	github.com/alicebob/miniredis/v2 v2.38.0
-	github.com/cloudwego/eino v0.9.12
+	github.com/cloudwego/eino v0.9.21
 	github.com/eino-contrib/jsonschema v1.0.3
 	github.com/go-sql-driver/mysql v1.10.0
 	github.com/gorilla/websocket v1.5.3
