@@ -149,8 +149,8 @@ func TestPrepareBindingEditCreatesSingleUseTypedRoute(t *testing.T) {
 		t.Fatal(err)
 	}
 	artifacts := &designingArtifactStub{values: map[string]string{
-		stepartifact.StepDesign: `{"schema_version":"agenui.design.v1"}`,
-		stepartifact.StepFinal:  `{"status":"completed"}`,
+		stepartifact.StepDesign:  `{"schema_version":"agenui.design.v1"}`,
+		stepartifact.StepBinding: `{"status":"blocked","issues":[]}`,
 	}}
 	if err := provider.SetPersistence(artifacts); err != nil {
 		t.Fatal(err)
@@ -168,8 +168,8 @@ func TestPrepareBindingEditCreatesSingleUseTypedRoute(t *testing.T) {
 	if err != nil || !strings.Contains(string(result.Data), `"route":"binding_edit"`) {
 		t.Fatalf("result = %s, err = %v", result.Data, err)
 	}
-	if artifacts.latestStep != stepartifact.StepFinal {
-		t.Fatalf("binding edit base selected from %q, want completed Final", artifacts.latestStep)
+	if artifacts.latestStep != stepartifact.StepBinding {
+		t.Fatalf("binding edit base selected from %q, want durable Binding", artifacts.latestStep)
 	}
 	query, baseRunID, ok := provider.TakeBindingEditRequest("tenant-1", "user-1", "session-1")
 	if !ok || query != "把标题改为另一个接口字段" || baseRunID != "run-base" {

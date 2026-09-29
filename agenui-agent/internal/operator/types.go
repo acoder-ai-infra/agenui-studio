@@ -12,6 +12,7 @@ const (
 	CodeOperatorDetailFetchFail = "operator_detail_fetch_failed"
 	CodeOperatorNotFound        = "operator_not_found"
 	CodeOperatorNotActive       = "operator_not_active"
+	CodeOperatorInputType       = "operator_input_type_mismatch"
 	CodeOperatorCodeEmpty       = "operator_code_empty"
 	CodeUnsupportedLanguage     = "unsupported_language"
 	CodeJSCompileFailed         = "js_compile_failed"

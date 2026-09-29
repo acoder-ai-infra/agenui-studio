@@ -594,7 +594,7 @@ func (h *Handler) publishOperator(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	if _, err = h.db.ExecContext(r.Context(), `INSERT INTO knowrag_operator(operator_id,operator_key,summary,published) VALUES(?,?,?,1) ON CONFLICT(operator_id) DO UPDATE SET operator_key=excluded.operator_key,summary=excluded.summary,published=1`, x.RuntimeID, x.OperatorKey, x.Description); err != nil {
+	if _, err = h.db.ExecContext(r.Context(), `INSERT INTO knowrag_operator(operator_id,operator_key,summary,published,input_schema_json,params_schema_json,output_schema_json) VALUES(?,?,?,1,?,?,?) ON CONFLICT(operator_id) DO UPDATE SET operator_key=excluded.operator_key,summary=excluded.summary,published=1,input_schema_json=excluded.input_schema_json,params_schema_json=excluded.params_schema_json,output_schema_json=excluded.output_schema_json`, x.RuntimeID, x.OperatorKey, x.Description, string(x.InputSchema), string(x.ParamsSchema), string(x.OutputSchema)); err != nil {
 		fail(w, 500, err)
 		return
 	}

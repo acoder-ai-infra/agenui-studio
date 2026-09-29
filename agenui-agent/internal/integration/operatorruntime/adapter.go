@@ -87,6 +87,9 @@ func (a *Adapter) RunOperator(
 		if result.Error != nil && result.Error.Code == platformoperator.CodeOperatorNotFound {
 			return bindingoperator.OperatorRuntimeResult{}, bindingoperator.ErrUnknownOperator
 		}
+		if result.Error != nil && result.Error.Code == platformoperator.CodeOperatorInputType {
+			return bindingoperator.OperatorRuntimeResult{}, bindingoperator.ErrInputTypeMismatch
+		}
 		return bindingoperator.OperatorRuntimeResult{}, bindingoperator.ErrExecutionFailed
 	}
 	output, err := json.Marshal(result.Value)

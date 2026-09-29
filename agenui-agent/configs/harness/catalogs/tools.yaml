@@ -139,11 +139,14 @@ definitions:
           maxItems: 100
           items:
             type: object
-            required: [operator_id, operator_key, summary]
+            required: [operator_id, operator_key, summary, input_schema, params_schema, output_schema]
             properties:
               operator_id: {type: integer, minimum: 1}
               operator_key: {type: string, minLength: 1}
               summary: {type: string, minLength: 1}
+              input_schema: {}
+              params_schema: {}
+              output_schema: {}
             additionalProperties: false
         total: {type: integer, minimum: 0}
         page_no: {type: integer, minimum: 1, maximum: 5}
@@ -157,7 +160,7 @@ definitions:
     display_name: 验证数据转换算子
     version: 1.1.0
     type: function
-    description: Dry-run one selected developer operator against a representative source field value and typed params.
+    description: Dry-run one selected developer operator against a representative source field value and typed params. Preserve the source field's native JSON type; numbers must not be quoted.
     allowed_agents: [agenui_binder]
     handler: agenui_execute_operator
     timeout_ms: 45000
@@ -166,7 +169,8 @@ definitions:
       required: [operator_id, sample_value, params]
       properties:
         operator_id: {type: integer, minimum: 1}
-        sample_value: {}
+        sample_value:
+          description: Representative source value in its native JSON type. Use an unquoted JSON number for integer/number source fields.
         params: {type: object}
       additionalProperties: false
     output_schema:
