@@ -1,0 +1,5 @@
+# Default reviewers for all repository files.
+# Keep this list in sync with the designated Admin and Maintain reviewers.
+# A review from any eligible owner satisfies the code-owner approval requirement
+# when that requirement is enabled in the branch rules.
+* @Drifter-Bai @liyan726 @lude1994 @xysonnet @youshan-9527 @lifeng3272 @ricolau @wangx1n-aos
