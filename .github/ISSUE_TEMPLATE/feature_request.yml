@@ -1,0 +1,25 @@
+name: Feature request
+description: Propose a focused improvement to AGenUI Studio
+title: "[Feature] "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include credentials, private business data, or internal logs.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and use case
+      description: Describe who needs this improvement and the problem it solves.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

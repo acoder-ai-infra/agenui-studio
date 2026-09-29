@@ -1,3 +1,14 @@
+## Related issue
+
+Use `Fixes #123`, `Refs #123`, or `N/A` with a short explanation.
+
+## Change type
+
+- [ ] Bug fix
+- [ ] Feature
+- [ ] Documentation
+- [ ] Maintenance / dependency update
+
 ## What changed
 
 Describe the user-visible behavior and the architectural boundary affected.
