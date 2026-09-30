@@ -19,6 +19,6 @@
   "devDependencies": {
     "jsdom": "^25.0.1",
     "typescript": "^5.5.4",
-    "vitest": "^3.2.6"
+    "vitest": "^5.0.2"
   }
 }
