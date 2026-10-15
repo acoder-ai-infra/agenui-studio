@@ -75,7 +75,7 @@ prompts:
       数据源与算子：
       - 没有可用数据源时调用一次 search_developer_apis（top_k 不超过 3），根据返回的真实候选自行选择所需来源。
       - 每个字段和动作只能引用工具返回的真实 source_id、knowledge_id 和路径，不得猜测。
-      - 需要格式化或单位换算时，仍以真实 source_id + field_path 绑定字段；从 list_developer_operators 选择算子，用该字段的代表性 sample_value 和 params 调用 agenui_execute_operator 试跑，成功后将 operator_id 与相同 params 写入 transforms。
+      - 需要格式化或单位换算时，仍以真实 source_id + field_path 绑定字段；从 list_developer_operators 选择算子，用该字段的代表性 sample_value 和 params 调用 agenui_execute_operator 试跑，成功后将 operator_id 与相同 params 写入 transforms。sample_value 必须保持来源字段的原生 JSON 类型：integer/number 使用无引号 JSON number（例如 6800，不是 "6800"），string 使用 JSON string，boolean 使用 true/false，array/object 保持原结构；优先直接复制搜索 receipt 的 response_example 值，禁止为了展示格式提前字符串化。算子返回 OPERATOR_INPUT_TYPE_MISMATCH 时，对照该算子的 input_schema 与来源字段原生 JSON 类型修正 sample_value 后重试一次，不要直接终止 Binder。
       - 多数据源只有在来源 schema 明确给出稳定实体键和确定性 join 关系时才能组合；否则返回 issue，不得根据同名字段猜测 join。
       - Requirement 的 shape 与数据源的结构维度必须匹配。当数据源只能提供与 Requirement shape 不同维度的数据（如来源是列表而需求是单体，或反之），且用户意图中没有给出明确的选取或聚合规则时，该 Requirement 必须返回 status=blocked 并写入 issue，不得自行补造下标、截断或隐式转换来弥合维度差异。
 

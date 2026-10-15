@@ -49,7 +49,10 @@ CREATE TABLE IF NOT EXISTS knowrag_api (
 CREATE INDEX IF NOT EXISTS knowrag_api_search ON knowrag_api(search_text);
 CREATE TABLE IF NOT EXISTS knowrag_operator (
  operator_id INTEGER PRIMARY KEY, operator_key TEXT NOT NULL,
- summary TEXT NOT NULL, published INTEGER NOT NULL DEFAULT 1
+ summary TEXT NOT NULL, published INTEGER NOT NULL DEFAULT 1,
+ input_schema_json TEXT NOT NULL DEFAULT 'true',
+ params_schema_json TEXT NOT NULL DEFAULT 'true',
+ output_schema_json TEXT NOT NULL DEFAULT 'true'
 );`); err != nil {
 		return err
 	}
@@ -57,6 +60,45 @@ CREATE TABLE IF NOT EXISTS knowrag_operator (
 		if err := ensureKnowledgeColumn(ctx, s.db, column); err != nil {
 			return err
 		}
+	}
+	for _, column := range []struct {
+		name       string
+		definition string
+	}{
+		{name: "input_schema_json", definition: "TEXT NOT NULL DEFAULT 'true'"},
+		{name: "params_schema_json", definition: "TEXT NOT NULL DEFAULT 'true'"},
+		{name: "output_schema_json", definition: "TEXT NOT NULL DEFAULT 'true'"},
+	} {
+		if err := ensureOperatorKnowledgeColumn(ctx, s.db, column.name, column.definition); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func ensureOperatorKnowledgeColumn(ctx context.Context, db *sql.DB, column, definition string) error {
+	rows, err := db.QueryContext(ctx, `PRAGMA table_info(knowrag_operator)`)
+	if err != nil {
+		return fmt.Errorf("inspect knowrag_operator schema: %w", err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var cid int
+		var name, typ string
+		var notNull, pk int
+		var defaultValue any
+		if err := rows.Scan(&cid, &name, &typ, &notNull, &defaultValue, &pk); err != nil {
+			return err
+		}
+		if name == column {
+			return nil
+		}
+	}
+	if err := rows.Err(); err != nil {
+		return err
+	}
+	if _, err := db.ExecContext(ctx, `ALTER TABLE knowrag_operator ADD COLUMN `+column+` `+definition); err != nil {
+		return fmt.Errorf("add knowrag_operator.%s: %w", column, err)
 	}
 	return nil
 }
@@ -402,7 +444,7 @@ func (s *Server) operators(ctx context.Context, raw json.RawMessage) (any, error
 	if err := s.db.QueryRowContext(ctx, `SELECT COUNT(*) FROM knowrag_operator WHERE published=1 AND TRIM(summary) <> ''`).Scan(&total); err != nil {
 		return nil, err
 	}
-	rows, err := s.db.QueryContext(ctx, `SELECT operator_id,operator_key,summary FROM knowrag_operator WHERE published=1 AND TRIM(summary) <> '' ORDER BY operator_id LIMIT ? OFFSET ?`, input.PageSize, (input.PageNo-1)*input.PageSize)
+	rows, err := s.db.QueryContext(ctx, `SELECT operator_id,operator_key,summary,input_schema_json,params_schema_json,output_schema_json FROM knowrag_operator WHERE published=1 AND TRIM(summary) <> '' ORDER BY operator_id LIMIT ? OFFSET ?`, input.PageSize, (input.PageNo-1)*input.PageSize)
 	if err != nil {
 		return nil, err
 	}
@@ -410,11 +452,15 @@ func (s *Server) operators(ctx context.Context, raw json.RawMessage) (any, error
 	values := []map[string]any{}
 	for rows.Next() {
 		var id int64
-		var key, summary string
-		if err := rows.Scan(&id, &key, &summary); err != nil {
+		var key, summary, inputSchema, paramsSchema, outputSchema string
+		if err := rows.Scan(&id, &key, &summary, &inputSchema, &paramsSchema, &outputSchema); err != nil {
 			return nil, err
 		}
-		values = append(values, map[string]any{"operator_id": id, "operator_key": key, "summary": summary})
+		values = append(values, map[string]any{
+			"operator_id": id, "operator_key": key, "summary": summary,
+			"input_schema": jsonValue(inputSchema), "params_schema": jsonValue(paramsSchema),
+			"output_schema": jsonValue(outputSchema),
+		})
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
