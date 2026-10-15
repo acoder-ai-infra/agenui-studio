@@ -188,6 +188,11 @@ func TestListDeveloperOperatorsMatchesPublishedPagedContract(t *testing.T) {
 	if page.Total != 3 || page.PageNo != 2 || page.PageSize != 2 || len(page.Items) != 1 || page.Items[0]["operator_key"] != "third" {
 		t.Fatalf("operator page = %s", content)
 	}
+	for _, key := range []string{"input_schema", "params_schema", "output_schema"} {
+		if _, ok := page.Items[0][key]; !ok {
+			t.Fatalf("operator page omits %s: %s", key, content)
+		}
+	}
 	assertOperatorCatalogConformance(t, json.RawMessage(content))
 }
 
