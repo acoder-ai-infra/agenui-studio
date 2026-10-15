@@ -58,7 +58,7 @@ type NoticeTone = 'success' | 'error' | 'neutral';
 type RuleFilter = 'all' | SourceRuleItem['kind'];
 
 const buttonBase =
-  'inline-flex h-11 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-3.5 text-[12px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:h-9';
+  'inline-flex h-11 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-3.5 text-[12px] font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:h-9';
 const secondaryButton = `${buttonBase} border border-line bg-surface-raised text-neutral-700 hover:border-neutral-300 hover:bg-neutral-50`;
 const primaryButton = `${buttonBase} bg-inverse text-inverse-fg hover:bg-inverse-hover`;
 
@@ -239,7 +239,7 @@ export default function RulesPage() {
 
       {message && <Notice tone={noticeTone}>{message}</Notice>}
 
-      <section className="mt-5 overflow-hidden rounded-xl border border-line bg-surface-raised shadow-sm">
+      <section className="mt-5 overflow-hidden rounded-xl border border-line bg-surface-raised shadow-xs">
         <div className="flex flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
           <div className="flex min-w-0 items-start gap-3">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600">
@@ -274,12 +274,12 @@ export default function RulesPage() {
       </section>
 
       {attentionJob && (
-        <section aria-label={t('rules.latestJob')} className="mt-4 overflow-hidden rounded-xl border border-line bg-surface-raised shadow-sm">
+        <section aria-label={t('rules.latestJob')} className="mt-4 overflow-hidden rounded-xl border border-line bg-surface-raised shadow-xs">
           <JobRow job={attentionJob} />
         </section>
       )}
 
-      <section className="mt-5 rounded-2xl border border-line bg-surface-raised p-4 shadow-sm sm:p-5">
+      <section className="mt-5 rounded-2xl border border-line bg-surface-raised p-4 shadow-xs sm:p-5">
         <div className="flex min-w-0 items-center justify-between gap-3 border-b border-line pb-4">
           <div className="flex min-w-0 items-start gap-2.5">
             <Check aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
@@ -318,9 +318,9 @@ export default function RulesPage() {
                     role="tab"
                     aria-selected={filter === item.value}
                     onClick={() => setFilter(item.value)}
-                    className={`inline-flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg px-3 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 ${
+                    className={`inline-flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg px-3 text-[11px] font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400 ${
                       filter === item.value
-                        ? 'bg-surface-raised text-neutral-900 shadow-sm'
+                        ? 'bg-surface-raised text-neutral-900 shadow-xs'
                         : 'text-neutral-500 hover:text-neutral-800'
                     }`}
                   >
@@ -339,7 +339,7 @@ export default function RulesPage() {
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                   placeholder={t('rules.searchPlaceholder')}
-                  className="h-11 w-full rounded-lg border border-line bg-surface pl-9 pr-3 text-[12px] text-neutral-800 outline-none placeholder:text-neutral-400 focus:border-neutral-400 focus:ring-2 focus:ring-neutral-100 sm:h-9"
+                  className="h-11 w-full rounded-lg border border-line bg-surface pl-9 pr-3 text-[12px] text-neutral-800 outline-hidden placeholder:text-neutral-400 focus:border-neutral-400 focus:ring-2 focus:ring-neutral-100 sm:h-9"
                 />
               </label>
             </div>
@@ -351,7 +351,7 @@ export default function RulesPage() {
               </div>
             )}
             <details className="mt-4 border-t border-line pt-3 text-[10px] text-neutral-500">
-              <summary className="w-fit cursor-pointer select-none rounded-sm font-medium hover:text-neutral-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400">
+              <summary className="w-fit cursor-pointer select-none rounded-sm font-medium hover:text-neutral-700 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400">
                 {t('rules.versionDetails')}
               </summary>
               <div className="mt-2 grid gap-1 rounded-lg bg-neutral-50 px-3 py-2 sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-x-3">
@@ -366,7 +366,7 @@ export default function RulesPage() {
       </section>
 
       {historyJobs.length > 0 && (
-        <section className="mt-4 overflow-hidden rounded-xl border border-line bg-surface-raised shadow-sm">
+        <section className="mt-4 overflow-hidden rounded-xl border border-line bg-surface-raised shadow-xs">
           <div className="flex items-center justify-between gap-3 border-b border-line bg-neutral-50/60 px-4 py-3 sm:px-5">
             <div>
               <h2 className="text-[12px] font-semibold text-neutral-800">{t('rules.jobs')}</h2>
@@ -394,7 +394,7 @@ function Notice({ tone, children }: { tone: NoticeTone; children: React.ReactNod
   return (
     <div role={tone === 'error' ? 'alert' : 'status'} className={`mt-4 flex items-start gap-2 rounded-xl border px-3.5 py-3 text-[12px] leading-5 ${color}`}>
       <Icon aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-      <span className="min-w-0 break-words">{children}</span>
+      <span className="min-w-0 wrap-break-word">{children}</span>
     </div>
   );
 }
@@ -405,7 +405,7 @@ function TemplateLink({ href, label }: { href: string; label: string }) {
     <a
       href={href}
       download
-      className="inline-flex h-8 items-center gap-2 rounded-lg border border-line bg-surface-raised px-2.5 text-[10px] font-medium text-neutral-600 transition-colors hover:border-neutral-300 hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+      className="inline-flex h-8 items-center gap-2 rounded-lg border border-line bg-surface-raised px-2.5 text-[10px] font-medium text-neutral-600 transition-colors hover:border-neutral-300 hover:bg-neutral-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400"
     >
       <FileText aria-hidden="true" className="h-3 w-3 text-neutral-400" />
       <span>{label}</span>
@@ -479,7 +479,7 @@ function SourceCard({ item }: { item: SourceRuleItem }) {
           <span className="inline-flex items-center gap-1 rounded-md bg-neutral-100 px-1.5 py-0.5 text-[9px] font-medium text-neutral-500">
             <KindIcon aria-hidden="true" className="h-2.5 w-2.5" />{kindLabel}
           </span>
-          <h3 className="mt-2 min-w-0 text-pretty break-words text-[14px] font-semibold leading-5 text-neutral-900">{presentation.title}</h3>
+          <h3 className="mt-2 min-w-0 text-pretty wrap-break-word text-[14px] font-semibold leading-5 text-neutral-900">{presentation.title}</h3>
         </div>
       </div>
       <p className="mt-2 text-pretty text-[11px] leading-5 text-neutral-500">{presentation.description}</p>
@@ -488,13 +488,13 @@ function SourceCard({ item }: { item: SourceRuleItem }) {
           {relations.filter((relation) => relation.values.length > 0).map((relation) => (
             <div key={relation.label} className="flex gap-2">
               <dt className="shrink-0 text-neutral-400">{relation.label}</dt>
-              <dd className={`min-w-0 break-words ${relation.tone}`}>{relation.values.join(separator)}</dd>
+              <dd className={`min-w-0 wrap-break-word ${relation.tone}`}>{relation.values.join(separator)}</dd>
             </div>
           ))}
         </dl>
       )}
       <details className="mt-3 border-t border-line pt-3">
-        <summary className="w-fit cursor-pointer select-none rounded-sm text-[10px] font-medium text-neutral-500 hover:text-neutral-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400">
+        <summary className="w-fit cursor-pointer select-none rounded-sm text-[10px] font-medium text-neutral-500 hover:text-neutral-700 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400">
           {t('rules.technicalDetails')}
         </summary>
         <dl className="mt-2 grid gap-1 rounded-t-lg bg-neutral-50 px-3 pt-3 text-[10px] leading-4 sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-x-3">

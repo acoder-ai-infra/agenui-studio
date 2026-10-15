@@ -12,7 +12,7 @@ type PublicationTarget = {
 };
 
 const endpoint = '/api/v1/agenui/admin/local/publication-target';
-const field = 'h-10 w-full rounded-lg border border-neutral-200 bg-surface-raised px-3 text-[13px] text-neutral-800 outline-none transition-colors placeholder:text-neutral-500 focus:border-neutral-500 focus:ring-2 focus:ring-neutral-100';
+const field = 'h-10 w-full rounded-lg border border-neutral-200 bg-surface-raised px-3 text-[13px] text-neutral-800 outline-hidden transition-colors placeholder:text-neutral-500 focus:border-neutral-500 focus:ring-2 focus:ring-neutral-100';
 
 export default function PublicationSettingsPage() {
   const { t } = useLocale();
