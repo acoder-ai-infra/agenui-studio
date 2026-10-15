@@ -51,8 +51,6 @@ jobs:
         run: |
           go test ./...
           go vet ./...
-      # TODO(release): regenerate committed npm lockfiles against the public
-      # npm registry before the first public release.
       - name: Test and build renderer
         working-directory: packages/renderer
         run: |
