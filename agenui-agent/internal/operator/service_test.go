@@ -2,9 +2,53 @@ package operator
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"reflect"
 	"testing"
 )
+
+func TestNormalizeOperatorInputUsesPublishedTopLevelType(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name    string
+		value   any
+		schema  string
+		want    any
+		wantErr bool
+	}{
+		{name: "number stays number", value: float64(6800), schema: `{"type":"number"}`, want: float64(6800)},
+		{name: "null stays null", value: nil, schema: `{"type":"null"}`, want: nil},
+		{name: "encoded null", value: "null", schema: `{"type":"null"}`, want: nil},
+		{name: "null schema rejects number", value: float64(1), schema: `{"type":"null"}`, wantErr: true},
+		{name: "null schema rejects encoded number", value: "1", schema: `{"type":"null"}`, wantErr: true},
+		{name: "null schema rejects boolean", value: true, schema: `{"type":"null"}`, wantErr: true},
+		{name: "null schema rejects array", value: []any{}, schema: `{"type":"null"}`, wantErr: true},
+		{name: "null schema rejects object", value: map[string]any{}, schema: `{"type":"null"}`, wantErr: true},
+		{name: "strict numeric string", value: "1999", schema: `{"type":"number"}`, want: float64(1999)},
+		{name: "distance numeric string", value: "1500", schema: `{"type":"number"}`, want: float64(1500)},
+		{name: "display string rejected", value: "19.99元", schema: `{"type":"number"}`, wantErr: true},
+		{name: "whitespace rejected", value: " 1999 ", schema: `{"type":"number"}`, wantErr: true},
+		{name: "fraction rejected for integer", value: "1.5", schema: `{"type":"integer"}`, wantErr: true},
+		{name: "ordinary string preserved", value: "open", schema: `{"type":"string"}`, want: "open"},
+		{name: "strict encoded array", value: `[{"title":"示例商品","id":"1"}]`, schema: `{"type":"array"}`, want: []any{map[string]any{"title": "示例商品", "id": "1"}}},
+		{name: "non json string rejected for array", value: "not-an-array", schema: `{"type":"array"}`, wantErr: true},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			got, _, err := normalizeOperatorInput(test.value, json.RawMessage(test.schema))
+			if test.wantErr {
+				if err == nil {
+					t.Fatalf("normalizeOperatorInput(%#v) unexpectedly succeeded: %#v", test.value, got)
+				}
+				return
+			}
+			if err != nil || !reflect.DeepEqual(got, test.want) {
+				t.Fatalf("normalizeOperatorInput(%#v) = %#v, %v; want %#v", test.value, got, err, test.want)
+			}
+		})
+	}
+}
 
 type detailClientFunc func(context.Context, uint64) (OperatorDetail, error)
 
