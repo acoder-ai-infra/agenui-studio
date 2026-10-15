@@ -31,6 +31,7 @@ const (
 	BindingToolErrorUnavailable         = "DEPENDENCY_UNAVAILABLE"
 	BindingToolErrorIdempotencyConflict = "IDEMPOTENCY_CONFLICT"
 	BindingToolErrorExecutionFailed     = "EXECUTION_FAILED"
+	BindingToolErrorInputTypeMismatch   = "OPERATOR_INPUT_TYPE_MISMATCH"
 
 	maxBindingIdentityBytes   = 256
 	maxExecuteArgumentsBytes  = operator.MaxOperatorParameterBytes + 4096
@@ -370,6 +371,8 @@ func bindingOperatorErrorCode(err error) string {
 		return BindingToolErrorIdempotencyConflict
 	case errors.Is(err, operator.ErrUnknownOperator):
 		return BindingToolErrorNotFound
+	case errors.Is(err, operator.ErrInputTypeMismatch):
+		return BindingToolErrorInputTypeMismatch
 	case errors.Is(err, operator.ErrInvalidExecutionContext),
 		errors.Is(err, operator.ErrInvalidRuntimeResult),
 		errors.Is(err, operator.ErrRuntimePortUnavailable):

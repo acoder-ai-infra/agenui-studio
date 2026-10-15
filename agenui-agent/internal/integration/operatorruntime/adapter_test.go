@@ -87,6 +87,7 @@ func TestAdapterMapsPlatformFailuresWithoutReturningFallbackValue(t *testing.T) 
 		want error
 	}{
 		{name: "not found", code: platformoperator.CodeOperatorNotFound, want: bindingoperator.ErrUnknownOperator},
+		{name: "input type mismatch", code: platformoperator.CodeOperatorInputType, want: bindingoperator.ErrInputTypeMismatch},
 		{name: "execution failed", code: platformoperator.CodeJSExecuteFailed, want: bindingoperator.ErrExecutionFailed},
 	}
 	for _, test := range tests {
