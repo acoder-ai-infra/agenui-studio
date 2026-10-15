@@ -307,7 +307,7 @@ func (i *TaskInterceptor) enrichBindingArguments(
 				)
 			}
 		}
-		if templateResult == "" {
+		if templateResult == "" && !isBinder {
 			loaded, loadErr := i.store.Load(
 				ctx,
 				identity,
@@ -322,7 +322,7 @@ func (i *TaskInterceptor) enrichBindingArguments(
 			templateResult = loaded
 		}
 	}
-	if templateResult == "" || (!isBinder && apiResult == "") {
+	if !isBinder && (templateResult == "" || apiResult == "") {
 		if i.store == nil {
 			// Legacy/in-memory tests and standalone Binder calls may not have a
 			// Composition Root artifact store. Preserve their original task input;

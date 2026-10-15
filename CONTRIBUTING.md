@@ -45,11 +45,10 @@ npm ci --prefix packages/renderer
 make verify
 ```
 
-The npm lockfiles currently contain internal registry download URLs. Public
-registry migration is tracked by the release TODO in `.github/workflows/ci.yml`.
-Until that migration is complete, a clean installation outside that network may
-fail. Report the affected package without including credentials; do not delete
-the lockfiles or disable integrity checks to work around the failure.
+The npm lockfiles use public npm registry download URLs. Use `npm ci` to install
+the locked dependencies, and keep the lockfiles committed to the repository.
+Do not delete integrity values or disable integrity checks to work around an
+installation failure. Report the affected package without including credentials.
 
 Follow any additional checks in [AGENTS.md](AGENTS.md). Do not run a production
 build against the same cache directory as an active development server. Do not
