@@ -23,7 +23,7 @@ import (
 	"github.com/AGenUI/agenui-studio/harness/sdk"
 )
 
-const Version = "1.0"
+const Version = "2.0"
 
 // ErrStaleFinal prevents a downloaded or published runtime package from
 // silently delivering an older materialization after a newer Design edit.
@@ -108,20 +108,24 @@ type Binding struct {
 	RequirementID string       `json:"requirementId"`
 	DataSourceID  string       `json:"dataSourceId"`
 	FieldPath     string       `json:"fieldPath"`
-	Target        string       `json:"target"`
-	Scope         string       `json:"scope"`
+	RefKey        string       `json:"refKey"`
 	MissingPolicy string       `json:"missingPolicy"`
-	Transform     []Invocation `json:"transform,omitempty"`
+	FallbackValue any          `json:"fallbackValue,omitempty"`
+	Transforms    []Invocation `json:"transforms,omitempty"`
 }
 
 type Operator struct {
-	OperatorVersionID uint64 `json:"operatorVersionId"`
-	Version           int    `json:"version"`
-	SourceHash        string `json:"sourceHash,omitempty"`
-	Language          string `json:"language"`
-	LanguageVersion   string `json:"languageVersion,omitempty"`
-	SourceCode        string `json:"sourceCode"`
-	Entry             string `json:"entry"`
+	OperatorVersionID uint64          `json:"operatorVersionId"`
+	OperatorKey       string          `json:"operatorKey"`
+	Version           int             `json:"version"`
+	InputSchema       json.RawMessage `json:"inputSchema"`
+	ParamsSchema      json.RawMessage `json:"paramsSchema"`
+	OutputSchema      json.RawMessage `json:"outputSchema"`
+	SourceHash        string          `json:"sourceHash"`
+	Language          string          `json:"language"`
+	LanguageVersion   string          `json:"languageVersion,omitempty"`
+	SourceCode        string          `json:"sourceCode"`
+	Entry             string          `json:"entry"`
 }
 
 type Action struct {
@@ -314,7 +318,7 @@ func expandBindings(result bindingcontract.Result, set requirements.Set, sources
 		}
 		for _, slot := range item.TargetSlotIDs {
 			binding := Binding{SlotID: slot, RequirementID: item.RequirementID, DataSourceID: ds,
-				FieldPath: item.FieldPath, Target: runtimeTarget(item.RefKey), Scope: runtimeScope(item.RefKey),
+				FieldPath: item.FieldPath, RefKey: item.RefKey,
 				MissingPolicy: missing[item.RequirementID]}
 			if binding.MissingPolicy == "" {
 				binding.MissingPolicy = "hide"
@@ -323,7 +327,7 @@ func expandBindings(result bindingcontract.Result, set requirements.Set, sources
 				if transform.OperatorVersionID == 0 {
 					return nil, nil, nil, fmt.Errorf("package exporter: binding %s has invalid operator version", item.RequirementID)
 				}
-				binding.Transform = append(binding.Transform, Invocation{OperatorVersionID: transform.OperatorVersionID, Params: transform.Params})
+				binding.Transforms = append(binding.Transforms, Invocation{OperatorVersionID: transform.OperatorVersionID, Params: transform.Params})
 				opSet[transform.OperatorVersionID] = struct{}{}
 			}
 			bindings = append(bindings, binding)
@@ -351,9 +355,18 @@ func (e *Exporter) expandOperators(ctx context.Context, ids []uint64) ([]Operato
 		if err != nil || version < 1 || detail.Code == "" || detail.Entry == "" {
 			return nil, fmt.Errorf("package exporter: operator %d detail is incomplete", id)
 		}
-		result = append(result, Operator{OperatorVersionID: id, Version: version,
-			SourceHash: contentHash(detail.Code), Language: detail.Language, LanguageVersion: detail.LanguageVersion,
-			SourceCode: detail.Code, Entry: detail.Entry})
+		sourceHash := strings.TrimSpace(detail.SourceHash)
+		if sourceHash == "" {
+			sourceHash = contentHash(detail.Code)
+		}
+		result = append(result, Operator{
+			OperatorVersionID: id, OperatorKey: detail.OperatorKey, Version: version,
+			InputSchema:  append(json.RawMessage(nil), detail.InputSchema...),
+			ParamsSchema: append(json.RawMessage(nil), detail.ParamsSchema...),
+			OutputSchema: append(json.RawMessage(nil), detail.OutputSchema...),
+			SourceHash:   sourceHash, Language: detail.Language, LanguageVersion: detail.LanguageVersion,
+			SourceCode: detail.Code, Entry: detail.Entry,
+		})
 	}
 	return result, nil
 }
