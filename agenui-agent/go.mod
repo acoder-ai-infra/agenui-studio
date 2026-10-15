@@ -8,7 +8,7 @@ require (
 	github.com/dop251/goja v0.0.0-20260822123354-58e940e0d230
 	github.com/evanw/esbuild v0.28.1
 	github.com/go-sql-driver/mysql v1.10.0
-	github.com/mattn/go-sqlite3 v1.14.24
+	github.com/mattn/go-sqlite3 v1.14.52
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.2
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gopkg.in/yaml.v3 v3.0.1
@@ -18,7 +18,6 @@ require (
 require (
 	filippo.io/edwards25519 v1.2.0 // indirect
 	github.com/a2aproject/a2a-go/v2 v2.2.0 // indirect
-	github.com/aliyun/aliyun-oss-go-sdk v3.0.2+incompatible // indirect
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/bmatcuk/doublestar/v4 v4.10.0 // indirect
 	github.com/buger/jsonparser v1.1.2 // indirect
@@ -71,7 +70,6 @@ require (
 	golang.org/x/sys v0.45.0 // indirect
 	golang.org/x/term v0.40.0 // indirect
 	golang.org/x/text v0.37.0 // indirect
-	golang.org/x/time v0.14.0 // indirect
 	golang.org/x/tools v0.44.0 // indirect
 	lukechampine.com/uint128 v1.2.0 // indirect
 	modernc.org/cc/v3 v3.36.3 // indirect
