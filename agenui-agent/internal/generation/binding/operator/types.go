@@ -19,6 +19,7 @@ var (
 	ErrInvalidCommand          = errors.New("operator: invalid execution command")
 	ErrInvalidRuntimeResult    = errors.New("operator: invalid runtime result")
 	ErrUnknownOperator         = errors.New("operator: unknown operator_id")
+	ErrInputTypeMismatch       = errors.New("operator: input type mismatch")
 	ErrIdempotencyConflict     = errors.New("operator: idempotency key reused with a different request")
 	ErrRuntimePortUnavailable  = errors.New("operator: runtime port is unavailable")
 	ErrExecutionFailed         = errors.New("operator: execution failed")
