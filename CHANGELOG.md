@@ -20,7 +20,7 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ### Changed
 
 - Document the fork, topic-branch, pull-request, and review workflow, including
-  locked dependency installation and the pending public-registry migration.
+  locked dependency installation.
 - Add related-issue and change-type sections to the pull request template.
 - Limit CI to read-only repository permissions, pin Actions to full commit SHAs,
   set a job timeout, and cancel superseded runs for the same pull request.
@@ -29,3 +29,5 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 - Run CI for pushes and pull requests targeting `main` instead of listening for
   pushes to the unused `master` branch; add a manual workflow trigger.
+- Replace internal npm registry download URLs in the Web and renderer lockfiles
+  with public npm registry URLs while preserving dependency versions and integrity hashes.

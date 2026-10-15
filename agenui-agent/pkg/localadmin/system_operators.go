@@ -116,6 +116,24 @@ func (h *Handler) SeedSystemOperators(ctx context.Context) error {
 			return err
 		}
 	}
+	return h.backfillPublishedOperatorSchemas(ctx)
+}
+
+// backfillPublishedOperatorSchemas upgrades existing local knowledge facts
+// from their immutable published versions. Keep this reconciliation in local
+// admin so the standalone KnowRAG schema has no dependency on management tables.
+func (h *Handler) backfillPublishedOperatorSchemas(ctx context.Context) error {
+	_, err := h.db.ExecContext(ctx, `UPDATE knowrag_operator
+ SET (input_schema_json,params_schema_json,output_schema_json) = (
+ SELECT input_schema_json,params_schema_json,output_schema_json
+ FROM local_operator_version
+ WHERE runtime_id=knowrag_operator.operator_id AND status=1)
+ WHERE published=1 AND EXISTS (
+ SELECT 1 FROM local_operator_version
+ WHERE runtime_id=knowrag_operator.operator_id AND status=1)`)
+	if err != nil {
+		return fmt.Errorf("backfill published operator schemas: %w", err)
+	}
 	return nil
 }
 
@@ -175,7 +193,7 @@ func (h *Handler) seedSystemOperator(ctx context.Context, seed operatorInput) er
 			return fmt.Errorf("system operator %q version 1 conflicts with the bundled immutable definition", seed.OperatorKey)
 		}
 	}
-	if _, err = tx.ExecContext(ctx, `INSERT INTO knowrag_operator(operator_id,operator_key,summary,published) VALUES(?,?,?,1) ON CONFLICT(operator_id) DO UPDATE SET operator_key=excluded.operator_key,summary=excluded.summary,published=1`, runtimeID, seed.OperatorKey, seed.Description); err != nil {
+	if _, err = tx.ExecContext(ctx, `INSERT INTO knowrag_operator(operator_id,operator_key,summary,published,input_schema_json,params_schema_json,output_schema_json) VALUES(?,?,?,1,?,?,?) ON CONFLICT(operator_id) DO UPDATE SET operator_key=excluded.operator_key,summary=excluded.summary,published=1,input_schema_json=excluded.input_schema_json,params_schema_json=excluded.params_schema_json,output_schema_json=excluded.output_schema_json`, runtimeID, seed.OperatorKey, seed.Description, inputSchema, paramsSchema, outputSchema); err != nil {
 		return err
 	}
 	return tx.Commit()
