@@ -83,7 +83,7 @@ const A2uiPreview = dynamic(
   { ssr: false, loading: () => <div className="min-h-[300px]" /> },
 );
 
-const MonacoEditor = dynamic(() => import('@monaco-editor/react'), {
+const MonacoEditor = dynamic(() => import('@/app/admin/components/MonacoEditor'), {
   ssr: false,
   loading: () => <div className="h-full animate-pulse rounded bg-neutral-50" />,
 });

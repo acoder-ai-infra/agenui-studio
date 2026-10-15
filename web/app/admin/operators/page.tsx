@@ -12,7 +12,7 @@ import {
 } from './operator-config';
 import { useTheme } from '@/lib/theme/ThemeContext';
 
-const MonacoEditor = dynamic(() => import('@monaco-editor/react'), {
+const MonacoEditor = dynamic(() => import('@/app/admin/components/MonacoEditor'), {
   ssr: false,
   loading: () => <div className="h-full animate-pulse rounded bg-neutral-50" />,
 });
