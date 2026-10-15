@@ -1,3 +1,9 @@
+import { readFileSync } from "node:fs";
+
+// Resolve at build time: Monaco does not export its package.json to the browser.
+const lockfile = JSON.parse(readFileSync(new URL("./package-lock.json", import.meta.url), "utf8"));
+const monacoVersion = lockfile.packages["node_modules/monaco-editor"].version;
+
 /** @type {import('next').NextConfig} */
 // The AGenUI service listens on 18081 by default. Deployments
 // may still override this without changing the management-console contract.
@@ -7,6 +13,7 @@ const backend = process.env.AGENUI_BACKEND_URL || "http://127.0.0.1:18081";
 // handler) instead of rewrites — rewrites buffer SSE and would stall the
 // canonical event stream for slow real-model runs.
 const nextConfig = {
+  env: { NEXT_PUBLIC_MONACO_VERSION: monacoVersion },
   // Keep production builds separate from the development server cache. Running
   // `npm run build` while Studio is open must not invalidate its CSS/chunks.
   distDir: process.env.AGENUI_NEXT_DIST_DIR || ".next",
