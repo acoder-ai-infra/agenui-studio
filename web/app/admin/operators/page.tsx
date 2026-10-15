@@ -149,7 +149,7 @@ export default function OperatorsPage() {
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="meters_to_km"
-                className="h-8 rounded-md border border-neutral-200 bg-surface-raised px-2 text-[12px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none"
+                className="h-8 rounded-md border border-neutral-200 bg-surface-raised px-2 text-[12px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-hidden"
               />
             </label>
             <label className="text-[11px] text-neutral-400 flex flex-col gap-1">
@@ -158,7 +158,7 @@ export default function OperatorsPage() {
                 value={form.usageScenario}
                 onChange={(e) => setForm({ ...form, usageScenario: e.target.value })}
                 placeholder={t('operators.useCasePlaceholder')}
-                className="h-8 rounded-md border border-neutral-200 bg-surface-raised px-2 text-[12px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none"
+                className="h-8 rounded-md border border-neutral-200 bg-surface-raised px-2 text-[12px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-hidden"
               />
             </label>
             <label className="col-span-2 text-[11px] text-neutral-400 flex flex-col gap-1">
@@ -169,7 +169,7 @@ export default function OperatorsPage() {
                 placeholder={t('operators.descriptionPlaceholder')}
                 required
                 aria-required="true"
-                className="h-8 rounded-md border border-neutral-200 bg-surface-raised px-2 text-[12px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none"
+                className="h-8 rounded-md border border-neutral-200 bg-surface-raised px-2 text-[12px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-hidden"
               />
               <span className="text-[10px] leading-4 text-neutral-400">
                 {t('operators.descriptionHint')}
