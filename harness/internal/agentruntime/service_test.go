@@ -239,8 +239,9 @@ func TestRuntimeServiceCancellationReleasesRunWhenConsumerStopsReading(t *testin
 
 func TestRuntimeServiceCancelIsIdempotentUnderConcurrency(t *testing.T) {
 	state := NewInMemoryStateManager()
-	runtime := &cancelCapturingRuntime{MockRuntime: *NewMockRuntime()}
-	runtime.DelayPerEvent = time.Second
+	// Keep the runtime active until cancellation; an empty MockRuntime script
+	// finishes immediately, regardless of DelayPerEvent.
+	runtime := &cancellationWaitingRuntime{cancelCapturingRuntime: cancelCapturingRuntime{MockRuntime: *NewMockRuntime()}}
 	service := NewRuntimeService(runtime, state, observability.NoopLogger{}, observability.NewNoopTracer("test"))
 
 	events, err := service.Run(context.Background(), testRunRequest())
@@ -1045,6 +1046,21 @@ func (fixedIDGenerator) NewSpanID() string    { return "span_fixed" }
 func (fixedIDGenerator) NewRunID() string     { return "run_fixed" }
 func (fixedIDGenerator) NewEventID() string   { return "event_fixed" }
 func (fixedIDGenerator) NewRequestID() string { return "request_fixed" }
+
+// cancellationWaitingRuntime has no completion timer, so scheduler delays cannot
+// turn the concurrent cancellation test into a race against normal completion.
+type cancellationWaitingRuntime struct {
+	cancelCapturingRuntime
+}
+
+func (r *cancellationWaitingRuntime) Run(ctx context.Context, _ RunRequest) (<-chan observability.AgentEvent, error) {
+	out := make(chan observability.AgentEvent)
+	go func() {
+		<-ctx.Done()
+		close(out)
+	}()
+	return out, nil
+}
 
 type cancelCapturingRuntime struct {
 	MockRuntime
