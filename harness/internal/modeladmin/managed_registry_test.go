@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"sync"
 	"testing"
+	"time"
 
 	"github.com/AGenUI/agenui-studio/harness/internal/modelgateway"
 	_ "modernc.org/sqlite"
@@ -477,5 +478,42 @@ func assertExactlyOneDefault(t *testing.T, providers []ManagedProvider, wantID s
 	}
 	if len(defaults) != 1 || defaults[0] != wantID {
 		t.Fatalf("defaults=%v, want [%s]; providers=%#v", defaults, wantID, providers)
+	}
+}
+
+func TestManagedModelRegistrySavePreservesTimestampsWhenClockMovesBack(t *testing.T) {
+	ctx := context.Background()
+	registry := newTestRegistry(t)
+	created := time.Date(2026, 1, 1, 12, 0, 0, 0, time.UTC)
+	registry.now = func() time.Time { return created }
+	first, err := registry.Save(ctx, "clock-tenant", "first", sampleDefinition("first"), 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Model a writer whose sampled time predates a competing writer's commit.
+	registry.now = func() time.Time { return created.Add(-time.Second) }
+	second, err := registry.Save(ctx, "clock-tenant", "second", sampleDefinition("second"), 0)
+	if err != nil {
+		t.Fatalf("switch default with older clock: %v", err)
+	}
+	providers, err := registry.List(ctx, "clock-tenant")
+	if err != nil {
+		t.Fatal(err)
+	}
+	assertExactlyOneDefault(t, providers, "second")
+	for _, provider := range providers {
+		if provider.UpdatedAt.Before(provider.CreatedAt) || provider.UpdatedAt.Before(first.UpdatedAt) {
+			t.Fatalf("timestamp moved backwards: %#v", provider)
+		}
+	}
+
+	// The same guarantee applies to updates, not only default demotions.
+	updated, err := registry.Save(ctx, "clock-tenant", "third", second.Definition, second.Revision)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if updated.UpdatedAt.Before(second.UpdatedAt) || !updated.CreatedAt.Equal(second.CreatedAt) {
+		t.Fatalf("update changed timestamp ordering: before=%#v after=%#v", second, updated)
 	}
 }

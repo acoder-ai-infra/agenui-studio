@@ -45,7 +45,6 @@ func (r *SQLManagedRegistry) Save(ctx context.Context, tenantID, actor string, d
 	if err := validateManagedDefinition(definition); err != nil {
 		return ManagedProvider{}, err
 	}
-	now := r.now().UTC()
 	tx, err := r.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return ManagedProvider{}, err
@@ -54,6 +53,15 @@ func (r *SQLManagedRegistry) Save(ctx context.Context, tenantID, actor string, d
 	providers, err := lockAndListTenantProviders(ctx, tx, tenantID)
 	if err != nil {
 		return ManagedProvider{}, err
+	}
+	// Sample time after acquiring the tenant write lock. A concurrent writer
+	// may commit newer rows while this transaction waits for that lock.
+	now := r.now().UTC()
+	for _, provider := range providers {
+		// Keep updates monotonic even if another instance's clock is ahead.
+		if provider.UpdatedAt.After(now) {
+			now = provider.UpdatedAt
+		}
 	}
 	targetIndex := -1
 	for index := range providers {
