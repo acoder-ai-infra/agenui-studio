@@ -29,7 +29,7 @@ export default function CreatePage() {
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder={t('newCard.placeholder')}
-          className="min-h-[140px] w-full rounded-lg border border-neutral-200 bg-surface-raised p-3 text-[13px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none"
+          className="min-h-[140px] w-full rounded-lg border border-neutral-200 bg-surface-raised p-3 text-[13px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-hidden"
         />
         <div className="flex items-center gap-3 mt-3">
           <button

@@ -445,7 +445,7 @@ function ProgressRows({ timeline, rootRunActive }: {
                               {t('process.resultTitle')}
                             </div>
                             {formattedResult && (
-                              <pre className="mt-1 max-h-48 max-w-full overflow-auto whitespace-pre-wrap break-words font-mono text-[9px] leading-4 text-neutral-600 [overflow-wrap:anywhere]">
+                              <pre className="mt-1 max-h-48 max-w-full overflow-auto whitespace-pre-wrap wrap-break-word font-mono text-[9px] leading-4 text-neutral-600 wrap-anywhere">
                                 {formattedResult.text}
                               </pre>
                             )}
@@ -454,7 +454,7 @@ function ProgressRows({ timeline, rootRunActive }: {
                                 href={artifactContentURL(resultRef)}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="mt-1 inline-flex text-[9px] leading-4 text-info hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-info"
+                                className="mt-1 inline-flex text-[9px] leading-4 text-info hover:underline focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-info"
                               >
                                 {t('process.openFullResult')}
                               </a>
@@ -503,7 +503,7 @@ function NextStepsCard({ plan, disabled, onSelect }: {
   return (
     <section className="mt-3 rounded-xl bg-sky-50/80 px-3 py-3" aria-label={t('home.nextStepsTitle')}>
       <div className="flex items-center gap-2.5">
-        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-info text-info-fg shadow-sm">
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-info text-info-fg shadow-xs">
           <MousePointerClick aria-hidden="true" className="h-3.5 w-3.5" />
         </span>
         <span className="min-w-0">
@@ -521,19 +521,19 @@ function NextStepsCard({ plan, disabled, onSelect }: {
               disabled={disabled}
               onClick={() => onSelect(item.prompt)}
               aria-label={t('home.nextStepPrefill', { label: item.label })}
-              className="group flex w-full items-start gap-3 py-2.5 text-left transition-colors hover:text-info focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-info disabled:cursor-not-allowed disabled:opacity-50"
+              className="group flex w-full items-start gap-3 py-2.5 text-left transition-colors hover:text-info focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-info disabled:cursor-not-allowed disabled:opacity-50"
             >
               <span className="min-w-0 flex-1">
-                <span className="block break-words text-[12px] font-semibold leading-5 text-neutral-800 group-hover:text-info">
+                <span className="block wrap-break-word text-[12px] font-semibold leading-5 text-neutral-800 group-hover:text-info">
                   {item.label}
                 </span>
                 {description && (
-                  <span className="mt-0.5 block break-words text-[10px] leading-4 text-neutral-500">
+                  <span className="mt-0.5 block wrap-break-word text-[10px] leading-4 text-neutral-500">
                     {description}
                   </span>
                 )}
               </span>
-              <span aria-hidden="true" className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-surface-raised text-[12px] font-semibold text-info shadow-sm transition-transform group-hover:translate-x-0.5">→</span>
+              <span aria-hidden="true" className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-surface-raised text-[12px] font-semibold text-info shadow-xs transition-transform group-hover:translate-x-0.5">→</span>
             </button>
           );
         })}
@@ -560,7 +560,7 @@ function ControlFreeInput({ onSend, placeholder }: {
           }
         }}
         placeholder={placeholder ?? t('home.answerPlaceholder')}
-        className="h-7 flex-1 rounded-md border border-sky-200 bg-surface-raised px-2 text-[11px] text-neutral-800 placeholder:text-neutral-500 focus:border-sky-400 focus:outline-none"
+        className="h-7 flex-1 rounded-md border border-sky-200 bg-surface-raised px-2 text-[11px] text-neutral-800 placeholder:text-neutral-500 focus:border-sky-400 focus:outline-hidden"
       />
       <button
         onClick={() => {
@@ -599,7 +599,7 @@ function AskUserCard({
   }, [control.id]);
 
   return (
-    <section className="mt-3 overflow-hidden rounded-xl border border-sky-200 bg-sky-50/70 shadow-sm" aria-label={t('home.askUserTitle')}>
+    <section className="mt-3 overflow-hidden rounded-xl border border-sky-200 bg-sky-50/70 shadow-xs" aria-label={t('home.askUserTitle')}>
       <div className="flex items-start gap-2.5 border-b border-sky-100 bg-surface-raised/70 px-3.5 py-3">
         <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-info text-info-fg">
           <CircleHelp aria-hidden="true" className="h-4 w-4" />
@@ -647,9 +647,9 @@ function AskUserCard({
                           },
                         }))}
                         className={cn(
-                          'flex min-h-11 w-full items-start gap-2.5 rounded-lg border px-3 py-2.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-info disabled:cursor-not-allowed disabled:opacity-60',
+                          'flex min-h-11 w-full items-start gap-2.5 rounded-lg border px-3 py-2.5 text-left transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-info disabled:cursor-not-allowed disabled:opacity-60',
                           selected
-                            ? 'border-info bg-surface-raised shadow-sm'
+                            ? 'border-info bg-surface-raised shadow-xs'
                             : 'border-sky-100 bg-surface-raised/70 hover:border-sky-300 hover:bg-surface-raised',
                         )}
                       >
@@ -663,9 +663,9 @@ function AskUserCard({
                           {selected && <span className="h-1.5 w-1.5 rounded-full bg-info-fg" />}
                         </span>
                         <span className="min-w-0">
-                          <span className="block break-words text-[11px] font-semibold leading-5 text-neutral-800">{option.label}</span>
+                          <span className="block wrap-break-word text-[11px] font-semibold leading-5 text-neutral-800">{option.label}</span>
                           {option.description && (
-                            <span className="mt-0.5 block break-words text-[10px] leading-4 text-neutral-500">{option.description}</span>
+                            <span className="mt-0.5 block wrap-break-word text-[10px] leading-4 text-neutral-500">{option.description}</span>
                           )}
                         </span>
                       </button>
@@ -685,7 +685,7 @@ function AskUserCard({
                     },
                   }))}
                   placeholder={inputOption?.placeholder ?? t('home.customAnswerPlaceholder')}
-                  className="mt-1.5 h-10 w-full rounded-lg border border-sky-100 bg-surface-raised px-3 text-[11px] text-neutral-800 placeholder:text-neutral-400 focus:border-info focus:outline-none focus:ring-2 focus:ring-info/15 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="mt-1.5 h-10 w-full rounded-lg border border-sky-100 bg-surface-raised px-3 text-[11px] text-neutral-800 placeholder:text-neutral-400 focus:border-info focus:outline-hidden focus:ring-2 focus:ring-info/15 disabled:cursor-not-allowed disabled:opacity-60"
                 />
               </label>
             </fieldset>
@@ -700,7 +700,7 @@ function AskUserCard({
           type="button"
           disabled={disabled || !complete}
           onClick={() => onSubmit(control.questions.map((question) => drafts[question.id]!))}
-          className="min-h-10 rounded-lg bg-info px-4 text-[11px] font-semibold text-info-fg transition-colors hover:bg-info-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-info focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-45"
+          className="min-h-10 rounded-lg bg-info px-4 text-[11px] font-semibold text-info-fg transition-colors hover:bg-info-hover focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-info focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-45"
         >
           {t('home.askUserSubmit')}
         </button>
@@ -719,7 +719,7 @@ function ProtocolPendingState({ running, error }: { running: boolean; error?: st
             <TriangleAlert aria-hidden="true" className="h-5 w-5" />
           </div>
           <p className="mt-4 text-[13px] font-semibold text-neutral-800">{t('home.dslFailed')}</p>
-          <p className="mt-1.5 break-words text-[11px] leading-5 text-neutral-500">{error}</p>
+          <p className="mt-1.5 wrap-break-word text-[11px] leading-5 text-neutral-500">{error}</p>
           <p className="mt-3 text-[11px] text-neutral-400">{t('home.dslFailedHint')}</p>
         </div>
       </div>
@@ -821,7 +821,7 @@ function RuntimeDeliveryEndpoint({
       ) : (
         <>
           <div className="min-w-0 flex-1">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-neutral-400">{t('home.deliveryEndpoint')}</p>
+            <p className="text-[9px] font-semibold uppercase tracking-widest text-neutral-400">{t('home.deliveryEndpoint')}</p>
             <p className="truncate text-[10px] font-medium text-neutral-700">{endpointLabel}</p>
           </div>
           <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[8px] font-medium ${state.className}`}>
@@ -836,7 +836,7 @@ function RuntimeDeliveryEndpoint({
 function PreviewSkeleton({ colorScheme }: { colorScheme: ColorScheme }) {
   const { t } = useLocale();
   const dark = colorScheme === 'dark';
-  const muted = dark ? 'bg-white/[0.12]' : 'bg-neutral-200';
+  const muted = dark ? 'bg-white/12' : 'bg-neutral-200';
   const strong = dark ? 'bg-white/20' : 'bg-neutral-300/80';
 
   return (
@@ -1121,7 +1121,7 @@ function ImplementationDetail({
         <button
           type="button"
           onClick={onDownloadDSL}
-          className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-line bg-surface text-[10px] font-medium text-neutral-700 transition-colors hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+          className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-line bg-surface text-[10px] font-medium text-neutral-700 transition-colors hover:bg-neutral-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400"
         >
           <Download aria-hidden="true" className="h-3.5 w-3.5" />
           {t('home.downloadDsl')}
@@ -1131,7 +1131,7 @@ function ImplementationDetail({
           onClick={onPackageRuntime}
           disabled={!insight.bundleReady}
           title={t(insight.bundleReady ? 'home.packageRuntimeReady' : 'home.packageRuntimeBlocked')}
-          className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-inverse text-[10px] font-medium text-inverse-fg transition-colors hover:bg-inverse-hover disabled:cursor-not-allowed disabled:opacity-35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+          className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-inverse text-[10px] font-medium text-inverse-fg transition-colors hover:bg-inverse-hover disabled:cursor-not-allowed disabled:opacity-35 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400"
         >
           <Package aria-hidden="true" className="h-3.5 w-3.5" />
           {t('home.packageRuntime')}
@@ -1173,7 +1173,7 @@ function PanelResizeHandle({
       onKeyDown={(event) => !hidden && onKeyDown(divider, event)}
       onDoubleClick={() => !hidden && onReset()}
       title={t('home.resizeHint')}
-      className={`group relative z-10 h-full touch-none bg-line outline-none ${
+      className={`group relative z-10 h-full touch-none bg-line outline-hidden ${
         hidden
           ? 'pointer-events-none opacity-0'
           : 'cursor-col-resize transition-colors hover:bg-progress focus-visible:bg-progress'
@@ -2356,7 +2356,7 @@ function ComposerInner() {
           onClick={() => workbenchStatus.view && openImplementation(workbenchStatus.view)}
           disabled={!workbenchStatus.view}
           title={workbenchStatus.view ? t('home.workbenchStatusOpen') : undefined}
-          className="ml-2 inline-flex h-7 min-w-0 max-w-[230px] items-center gap-2 rounded-full border border-line bg-surface-raised px-2.5 text-[10px] font-medium text-neutral-600 transition-colors hover:border-neutral-300 hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 disabled:cursor-default disabled:hover:border-line disabled:hover:bg-surface-raised sm:max-w-none"
+          className="ml-2 inline-flex h-7 min-w-0 max-w-[230px] items-center gap-2 rounded-full border border-line bg-surface-raised px-2.5 text-[10px] font-medium text-neutral-600 transition-colors hover:border-neutral-300 hover:bg-neutral-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400 disabled:cursor-default disabled:hover:border-line disabled:hover:bg-surface-raised sm:max-w-none"
         >
           <span aria-hidden="true" className={`h-1.5 w-1.5 shrink-0 rounded-full ${workbenchStatus.dotClassName}`} />
           <span className="truncate" role="status" aria-live="polite">{workbenchStatus.label}</span>
@@ -2381,7 +2381,7 @@ function ComposerInner() {
             </div>
             <Link
               href="/admin/settings"
-              className="inline-flex h-8 shrink-0 items-center rounded-md border border-amber-300 bg-surface-raised px-3 text-[12px] font-medium text-amber-900 transition-colors hover:border-amber-400 hover:bg-amber-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+              className="inline-flex h-8 shrink-0 items-center rounded-md border border-amber-300 bg-surface-raised px-3 text-[12px] font-medium text-amber-900 transition-colors hover:border-amber-400 hover:bg-amber-100 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
             >
               {t('home.goToSettings')}
             </Link>
@@ -2406,7 +2406,7 @@ function ComposerInner() {
           <div className="flex-1 space-y-4 overflow-y-auto px-5 py-4" ref={chatRef}>
             {lines.length === 0 && (
               <div className="mx-auto mt-12 max-w-[310px] text-center">
-                <div className="mx-auto inline-flex h-10 w-10 items-center justify-center rounded-xl bg-inverse text-inverse-fg shadow-sm">
+                <div className="mx-auto inline-flex h-10 w-10 items-center justify-center rounded-xl bg-inverse text-inverse-fg shadow-xs">
                   <LayoutTemplate aria-hidden="true" className="h-[18px] w-[18px]" />
                 </div>
                 <p className="mt-4 text-[14px] font-semibold text-neutral-800">{t('home.emptyTitle')}</p>
@@ -2419,7 +2419,7 @@ function ComposerInner() {
               line.role === 'user' ? (
                 <div
                   key={line.id}
-                  className="ml-auto max-w-[88%] whitespace-pre-wrap break-words rounded-2xl rounded-br-md bg-bubble px-4 py-3 text-[13px] leading-6 text-bubble-fg shadow-sm"
+                  className="ml-auto max-w-[88%] whitespace-pre-wrap wrap-break-word rounded-2xl rounded-br-md bg-bubble px-4 py-3 text-[13px] leading-6 text-bubble-fg shadow-xs"
                 >
                   {line.text}
                   {(line.attachments ?? []).length > 0 && (
@@ -2447,12 +2447,12 @@ function ComposerInner() {
               ) : (
                 <div
                   key={line.id}
-                  className="max-w-[94%] rounded-2xl rounded-bl-md border border-neutral-200/80 bg-surface px-4 py-3.5 shadow-sm"
+                  className="max-w-[94%] rounded-2xl rounded-bl-md border border-neutral-200/80 bg-surface px-4 py-3.5 shadow-xs"
                 >
                   {line.commentary && (
                     <div className="mb-3 flex items-start gap-2 text-[12px] leading-5 text-neutral-500">
                       <span aria-hidden="true" className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-info" />
-                      <span className="min-w-0 whitespace-pre-wrap break-words">{line.commentary}</span>
+                      <span className="min-w-0 whitespace-pre-wrap wrap-break-word">{line.commentary}</span>
                     </div>
                   )}
                   {line.text && <div className="whitespace-pre-wrap text-[13px] leading-6 text-neutral-800">{line.text}</div>}
@@ -2566,7 +2566,7 @@ function ComposerInner() {
             )}
           </div>
           <div className="shrink-0 border-t border-neutral-100 bg-neutral-50/70 p-4">
-            <div className="rounded-2xl border border-line-strong bg-surface-raised p-2.5 shadow-sm transition-colors focus-within:border-neutral-400">
+            <div className="rounded-2xl border border-line-strong bg-surface-raised p-2.5 shadow-xs transition-colors focus-within:border-neutral-400">
               {attachments.length > 0 && (
                 <div className="mb-2 flex flex-wrap gap-1.5 px-1">
                   {attachments.map((file, index) => (
@@ -2599,7 +2599,7 @@ function ComposerInner() {
 				placeholder={hasPackage ? t('home.inputPlaceholderEdit') : t('home.inputPlaceholderNew')}
                 rows={3}
                 aria-label={t('home.inputLabel')}
-                className="block min-h-[72px] w-full resize-none border-0 bg-transparent px-1 py-0.5 text-[13px] leading-5 text-neutral-800 outline-none placeholder:text-neutral-500 focus-visible:!outline-none"
+                className="block min-h-[72px] w-full resize-none border-0 bg-transparent px-1 py-0.5 text-[13px] leading-5 text-neutral-800 outline-hidden placeholder:text-neutral-500 focus-visible:outline-hidden!"
               />
               <div className="mt-1 flex items-center justify-between gap-3 pl-1">
                 <div className="flex items-center gap-2">
@@ -2661,14 +2661,14 @@ function ComposerInner() {
                 <div className="mt-0.5 text-[9px] text-neutral-400">{t('home.previewLive')}</div>
               )}
             </div>
-            <label className="group relative flex h-8 min-w-0 max-w-[210px] items-center gap-1.5 rounded-lg border border-line bg-surface-raised px-2.5 text-[10px] text-neutral-600 shadow-sm transition-colors hover:border-neutral-300 hover:bg-surface">
+            <label className="group relative flex h-8 min-w-0 max-w-[210px] items-center gap-1.5 rounded-lg border border-line bg-surface-raised px-2.5 text-[10px] text-neutral-600 shadow-xs transition-colors hover:border-neutral-300 hover:bg-surface">
               <Smartphone aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-neutral-500" />
               <span className="sr-only">{t('home.previewDevice')}</span>
               <select
                 value={previewDeviceId}
                 onChange={(event) => setPreviewDeviceId(event.target.value as PreviewDeviceID)}
                 aria-label={t('home.previewDeviceSelect')}
-                className="min-w-0 flex-1 cursor-pointer appearance-none bg-surface-raised pr-4 font-medium text-neutral-700 outline-none"
+                className="min-w-0 flex-1 cursor-pointer appearance-none bg-surface-raised pr-4 font-medium text-neutral-700 outline-hidden"
               >
                 {PREVIEW_DEVICES.map((device) => (
                   <option key={device.id} value={device.id}>
@@ -2720,7 +2720,7 @@ function ComposerInner() {
                 onClick={() => setProtocolCollapsed(false)}
                 aria-label={t('home.expandDsl')}
                 title={t('home.expandDsl')}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400"
               >
                 <PanelRightOpen aria-hidden="true" className="h-4 w-4" />
               </button>
@@ -2754,7 +2754,7 @@ function ComposerInner() {
                       href={`/api/v1/agenui/agent/sessions/${encodeURIComponent(sessionId)}/package`}
                       download
                       title={t('home.downloadTitle')}
-                      className="inline-flex h-7 items-center gap-1.5 rounded-md border border-neutral-200 px-2 text-[10px] font-medium text-neutral-600 transition-colors hover:bg-neutral-50 hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+                      className="inline-flex h-7 items-center gap-1.5 rounded-md border border-neutral-200 px-2 text-[10px] font-medium text-neutral-600 transition-colors hover:bg-neutral-50 hover:text-neutral-900 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400"
                     >
                       <Download aria-hidden="true" className="h-3.5 w-3.5" />
                       {t('home.download')}
@@ -2766,7 +2766,7 @@ function ComposerInner() {
                   onClick={() => setProtocolCollapsed(true)}
                   aria-label={t('home.collapseDsl')}
                   title={t('home.collapseDsl')}
-                  className={`${hasPackage && sessionId !== 'demo-1' && sessionId !== 'new' ? '' : 'ml-auto'} inline-flex h-7 w-7 items-center justify-center rounded-md text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400`}
+                  className={`${hasPackage && sessionId !== 'demo-1' && sessionId !== 'new' ? '' : 'ml-auto'} inline-flex h-7 w-7 items-center justify-center rounded-md text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-800 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400`}
                 >
                   <PanelRightClose aria-hidden="true" className="h-4 w-4" />
                 </button>
@@ -2802,7 +2802,7 @@ function ComposerInner() {
                         onClick={() => selectImplementationSection(section)}
                         onKeyDown={(event) => moveImplementationSection(event, section)}
                         title={t(IMPLEMENTATION_SECTION_META[section].descriptionKey)}
-                        className={`min-w-0 rounded-md px-2 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 ${
+                        className={`min-w-0 rounded-md px-2 text-[10px] font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400 ${
                           implementationSection === section
                             ? 'bg-neutral-100 text-neutral-900'
                             : 'text-neutral-500 hover:bg-neutral-50 hover:text-neutral-800'
@@ -2836,9 +2836,9 @@ function ComposerInner() {
                             onClick={() => openImplementation(view)}
                             onKeyDown={(event) => moveDSLView(event, view)}
                             title={t(IMPLEMENTATION_META[view].descriptionKey)}
-                            className={`flex min-w-0 items-center justify-center gap-1.5 rounded-md px-1.5 text-[9px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 ${
+                            className={`flex min-w-0 items-center justify-center gap-1.5 rounded-md px-1.5 text-[9px] font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400 ${
                               implementationView === view
-                                ? 'bg-surface-raised text-neutral-800 shadow-sm'
+                                ? 'bg-surface-raised text-neutral-800 shadow-xs'
                                 : 'text-neutral-500 hover:bg-surface-raised/70 hover:text-neutral-700'
                             }`}
                           >

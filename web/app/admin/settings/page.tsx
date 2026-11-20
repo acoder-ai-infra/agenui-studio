@@ -139,7 +139,7 @@ export default function SystemSettingsPage() {
     }
   };
 
-  const field = 'h-10 w-full rounded-lg border border-neutral-200 bg-surface-raised px-3 text-[13px] text-neutral-800 outline-none transition-colors placeholder:text-neutral-500 focus:border-neutral-500 focus:ring-2 focus:ring-neutral-100';
+  const field = 'h-10 w-full rounded-lg border border-neutral-200 bg-surface-raised px-3 text-[13px] text-neutral-800 outline-hidden transition-colors placeholder:text-neutral-500 focus:border-neutral-500 focus:ring-2 focus:ring-neutral-100';
   const isAnthropic = value?.protocol === 'anthropic';
 
   return (
@@ -195,7 +195,7 @@ export default function SystemSettingsPage() {
                     disabled={!value}
                     key={protocol.value}
                     onClick={() => selectProtocol(protocol.value)}
-                    className={`relative rounded-xl border p-3.5 text-left transition disabled:cursor-wait ${selected ? 'border-neutral-800 bg-neutral-50 shadow-sm' : 'border-neutral-200 bg-surface-raised hover:border-neutral-300'}`}
+                    className={`relative rounded-xl border p-3.5 text-left transition disabled:cursor-wait ${selected ? 'border-neutral-800 bg-neutral-50 shadow-xs' : 'border-neutral-200 bg-surface-raised hover:border-neutral-300'}`}
                   >
                     <span className="flex items-center justify-between gap-3">
                       <span className="text-[13px] font-semibold text-neutral-900">{t(protocol.titleKey)}</span>
@@ -283,7 +283,7 @@ export default function SystemSettingsPage() {
               onClick={() => void restartAgent()}
               disabled={restarting}
               aria-busy={restarting}
-              className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-amber-900 px-3.5 text-[12px] font-medium text-white hover:bg-amber-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60 sm:h-8"
+              className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-amber-900 px-3.5 text-[12px] font-medium text-white hover:bg-amber-800 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60 sm:h-8"
             >
               <RotateCcw aria-hidden="true" className={`h-3.5 w-3.5 ${restarting ? 'animate-spin' : ''}`} />
               {restarting ? t('settings.restartingAgent') : t('settings.restartAgent')}

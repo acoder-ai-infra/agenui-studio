@@ -81,15 +81,15 @@ export function PhoneShellWrapper({
         {/* 侧边实体按键 */}
         {isIOS ? (
           <>
-            <span aria-hidden="true" className="absolute -left-[4px] top-[15%] h-[3.5%] w-[4px] rounded-l-sm bg-[#343940]" />
-            <span aria-hidden="true" className="absolute -left-[4px] top-[22%] h-[7%] w-[4px] rounded-l-sm bg-[#343940]" />
-            <span aria-hidden="true" className="absolute -left-[4px] top-[31%] h-[7%] w-[4px] rounded-l-sm bg-[#343940]" />
-            <span aria-hidden="true" className="absolute -right-[4px] top-[24%] h-[10%] w-[4px] rounded-r-sm bg-[#343940]" />
+            <span aria-hidden="true" className="absolute left-[-4px] top-[15%] h-[3.5%] w-[4px] rounded-l-sm bg-[#343940]" />
+            <span aria-hidden="true" className="absolute left-[-4px] top-[22%] h-[7%] w-[4px] rounded-l-sm bg-[#343940]" />
+            <span aria-hidden="true" className="absolute left-[-4px] top-[31%] h-[7%] w-[4px] rounded-l-sm bg-[#343940]" />
+            <span aria-hidden="true" className="absolute right-[-4px] top-[24%] h-[10%] w-[4px] rounded-r-sm bg-[#343940]" />
           </>
         ) : (
           <>
-            <span aria-hidden="true" className="absolute -right-[4px] top-[18%] h-[6%] w-[4px] rounded-r-sm bg-[#343940]" />
-            <span aria-hidden="true" className="absolute -right-[4px] top-[27%] h-[11%] w-[4px] rounded-r-sm bg-[#343940]" />
+            <span aria-hidden="true" className="absolute right-[-4px] top-[18%] h-[6%] w-[4px] rounded-r-sm bg-[#343940]" />
+            <span aria-hidden="true" className="absolute right-[-4px] top-[27%] h-[11%] w-[4px] rounded-r-sm bg-[#343940]" />
           </>
         )}
 
@@ -109,7 +109,7 @@ export function PhoneShellWrapper({
             style={{ height: `${statusBarRatio * 100}%` }}
           >
             {isIOS ? (
-              <div className="absolute left-1/2 top-[48%] z-10 aspect-[4/1] w-[30%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-black shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)]" />
+              <div className="absolute left-1/2 top-[48%] z-10 aspect-4/1 w-[30%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-black shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)]" />
             ) : (
               <div className="absolute left-1/2 top-[44%] z-10 aspect-square w-[3.8%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-black shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]" />
             )}
@@ -129,10 +129,10 @@ export function PhoneShellWrapper({
                 <circle cx="7" cy="10" r="1.5" fill="currentColor" />
               </svg>
               <div aria-hidden="true" className={cn('flex items-center opacity-75', isDark ? 'text-device-icon-dark' : 'text-device-icon')}>
-                <div className="h-[9px] w-[20px] rounded-[3px] border border-current p-[1px]">
+                <div className="h-[9px] w-[20px] rounded-[3px] border border-current p-px">
                   <div className="h-full w-[78%] rounded-[1px] bg-current" />
                 </div>
-                <div className="ml-[1px] h-[4px] w-[1.5px] rounded-r-[1px] bg-current" />
+                <div className="ml-px h-[4px] w-[1.5px] rounded-r-[1px] bg-current" />
               </div>
             </div>
           </div>

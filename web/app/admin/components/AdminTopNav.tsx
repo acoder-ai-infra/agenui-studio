@@ -35,7 +35,7 @@ function UserMenu() {
       <button
         type="button"
         onClick={() => redirectToLogin()}
-        className="inline-flex h-7 items-center gap-1.5 rounded-lg px-2 text-xs font-medium text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+        className="inline-flex h-7 items-center gap-1.5 rounded-lg px-2 text-xs font-medium text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400"
       >
         <LogIn aria-hidden="true" className="h-3.5 w-3.5" />
         {t('auth.signIn')}
@@ -55,7 +55,7 @@ function UserMenu() {
         aria-expanded={open}
         aria-haspopup="menu"
         aria-label={t('nav.accountMenu')}
-        className="flex h-7 min-w-0 items-center gap-2 rounded-lg px-1.5 transition-colors hover:bg-neutral-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+        className="flex h-7 min-w-0 items-center gap-2 rounded-lg px-1.5 transition-colors hover:bg-neutral-100 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400"
       >
         <span className="max-w-28 truncate text-[12px] font-medium text-neutral-700">{displayName}</span>
         {showImg ? (
@@ -133,7 +133,7 @@ export function AdminTopNav({
           onClick={onMobileNavigationToggle}
           aria-expanded={mobileNavigationOpen}
           aria-label={mobileNavigationOpen ? t('nav.closeNavigation') : t('nav.openNavigation')}
-          className="mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-neutral-600 transition-colors hover:bg-neutral-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 md:hidden"
+          className="mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-neutral-600 transition-colors hover:bg-neutral-100 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400 md:hidden"
         >
           {mobileNavigationOpen
             ? <X aria-hidden="true" className="h-4 w-4" />
@@ -143,7 +143,7 @@ export function AdminTopNav({
       <Link
         href="/admin/home"
         aria-label={t('nav.backToWorkbench')}
-        className="flex shrink-0 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+        className="flex shrink-0 items-center rounded-lg focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400"
         onMouseEnter={onLogoHoverStart}
         onMouseLeave={onLogoHoverEnd}
       >
@@ -153,7 +153,7 @@ export function AdminTopNav({
           width={30}
           height={31}
           priority
-          className="h-[30px] w-[30px] rounded-lg object-cover shadow-sm ring-1 ring-black/5"
+          className="h-[30px] w-[30px] rounded-lg object-cover shadow-xs ring-1 ring-black/5"
         />
         <span className="ml-2 hidden text-[15px] font-extrabold tracking-tight text-neutral-900 sm:inline" translate="no">AGenUI</span>
       </Link>
@@ -166,9 +166,9 @@ export function AdminTopNav({
 
       <div className="flex-1" />
 
-      <div className="flex h-9 shrink-0 items-center gap-1 rounded-xl border border-neutral-200/80 bg-surface-raised px-1 shadow-sm">
-        <LocaleToggle className="h-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400" />
-        <ThemeToggle className="h-7 w-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400" />
+      <div className="flex h-9 shrink-0 items-center gap-1 rounded-xl border border-neutral-200/80 bg-surface-raised px-1 shadow-xs">
+        <LocaleToggle className="h-7 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400" />
+        <ThemeToggle className="h-7 w-7 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400" />
         <UserMenu />
       </div>
     </header>

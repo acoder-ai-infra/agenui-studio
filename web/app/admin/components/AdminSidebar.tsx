@@ -116,7 +116,7 @@ function LocalRuntimeStatus() {
   const { t } = useLocale();
   return (
     <section aria-label={t('runtime.statusRegion')} className="shrink-0 border-t border-neutral-100 p-3">
-      <div className="flex items-center gap-2.5 rounded-xl border border-neutral-200/70 bg-surface-raised px-3 py-2.5 shadow-sm">
+      <div className="flex items-center gap-2.5 rounded-xl border border-neutral-200/70 bg-surface-raised px-3 py-2.5 shadow-xs">
         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-neutral-100">
           <HardDrive aria-hidden="true" className="h-3.5 w-3.5 text-neutral-600" />
         </div>

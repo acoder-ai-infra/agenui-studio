@@ -149,7 +149,7 @@ export default function DataSourcesPage() {
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder={t('datasources.namePlaceholder')}
-                className="h-8 rounded-md border border-neutral-200 bg-surface-raised px-2 text-[12px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none"
+                className="h-8 rounded-md border border-neutral-200 bg-surface-raised px-2 text-[12px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-hidden"
               />
             </label>
             <label className="col-span-2 text-[11px] text-neutral-400 flex flex-col gap-1">
@@ -158,7 +158,7 @@ export default function DataSourcesPage() {
                 value={form.endpoint}
                 onChange={(e) => setForm({ ...form, endpoint: e.target.value })}
                 placeholder="http://127.0.0.1:18082/demo/products"
-                className="h-8 rounded-md border border-neutral-200 bg-surface-raised px-2 text-[12px] font-mono text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none"
+                className="h-8 rounded-md border border-neutral-200 bg-surface-raised px-2 text-[12px] font-mono text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-hidden"
               />
             </label>
             <label className="text-[11px] text-neutral-400 flex flex-col gap-1">
@@ -177,7 +177,7 @@ export default function DataSourcesPage() {
               <input
                 value={form.itemsPath}
                 onChange={(e) => setForm({ ...form, itemsPath: e.target.value })}
-                className="h-8 rounded-md border border-neutral-200 bg-surface-raised px-2 text-[12px] font-mono text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none"
+                className="h-8 rounded-md border border-neutral-200 bg-surface-raised px-2 text-[12px] font-mono text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-hidden"
               />
             </label>
             <label className="text-[11px] text-neutral-400 flex flex-col gap-1">
@@ -186,7 +186,7 @@ export default function DataSourcesPage() {
                 value={form.entityKey}
                 onChange={(e) => setForm({ ...form, entityKey: e.target.value })}
                 placeholder="product_id"
-                className="h-8 rounded-md border border-neutral-200 bg-surface-raised px-2 text-[12px] font-mono text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none"
+                className="h-8 rounded-md border border-neutral-200 bg-surface-raised px-2 text-[12px] font-mono text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-hidden"
               />
             </label>
             <label className="col-span-3 text-[11px] text-neutral-400 flex flex-col gap-1">
@@ -194,7 +194,7 @@ export default function DataSourcesPage() {
               <input
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
-                className="h-8 rounded-md border border-neutral-200 bg-surface-raised px-2 text-[12px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none"
+                className="h-8 rounded-md border border-neutral-200 bg-surface-raised px-2 text-[12px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-hidden"
               />
             </label>
           </div>
@@ -226,7 +226,7 @@ export default function DataSourcesPage() {
                   onChange={(e) =>
                     setFields(fields.map((x, j) => (j === i ? { ...x, path: e.target.value } : x)))
                   }
-                  className="h-7 rounded-md border border-neutral-200 bg-surface-raised px-1.5 text-[11px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none"
+                  className="h-7 rounded-md border border-neutral-200 bg-surface-raised px-1.5 text-[11px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-hidden"
                 />
                 <input
                   value={f.name}
@@ -234,7 +234,7 @@ export default function DataSourcesPage() {
                   onChange={(e) =>
                     setFields(fields.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)))
                   }
-                  className="h-7 rounded-md border border-neutral-200 bg-surface-raised px-1.5 text-[11px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none"
+                  className="h-7 rounded-md border border-neutral-200 bg-surface-raised px-1.5 text-[11px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-hidden"
                 />
                 <input
                   value={f.semantic}
@@ -242,7 +242,7 @@ export default function DataSourcesPage() {
                   onChange={(e) =>
                     setFields(fields.map((x, j) => (j === i ? { ...x, semantic: e.target.value } : x)))
                   }
-                  className="h-7 rounded-md border border-neutral-200 bg-surface-raised px-1.5 text-[11px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none"
+                  className="h-7 rounded-md border border-neutral-200 bg-surface-raised px-1.5 text-[11px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-hidden"
                 />
                 <select
                   value={f.valueType}
@@ -261,7 +261,7 @@ export default function DataSourcesPage() {
                   onChange={(e) =>
                     setFields(fields.map((x, j) => (j === i ? { ...x, unit: e.target.value } : x)))
                   }
-                  className="h-7 rounded-md border border-neutral-200 bg-surface-raised px-1.5 text-[11px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none"
+                  className="h-7 rounded-md border border-neutral-200 bg-surface-raised px-1.5 text-[11px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-hidden"
                 />
                 <select
                   value={f.scope}
@@ -375,7 +375,7 @@ export default function DataSourcesPage() {
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="h-8 flex-1 rounded-md border border-neutral-200 bg-surface-raised px-2 text-[12px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none"
+                className="h-8 flex-1 rounded-md border border-neutral-200 bg-surface-raised px-2 text-[12px] text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-hidden"
               />
               <button
                 onClick={recall}
