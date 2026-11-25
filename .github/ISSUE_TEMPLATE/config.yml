@@ -3,3 +3,6 @@ contact_links:
   - name: Security vulnerability
     url: https://github.com/acoder-ai-infra/agenui-studio/security/policy
     about: Follow the private reporting instructions. Do not disclose vulnerabilities in a public issue.
+  - name: Community and contact / 社区与联系
+    url: https://github.com/acoder-ai-infra/agenui-studio/blob/main/README.zh-CN.md#%E7%A4%BE%E5%8C%BA%E4%B8%8E%E8%81%94%E7%B3%BB
+    about: Find the project email and community group information. 查找项目邮箱和交流群信息。
